@@ -1,0 +1,87 @@
+自动生成Makefile文件  
+自动生成Makefile文件并最终生成发布包需要一次执行下面几个命令：
+1、autoscan ; 
+2、aclocal ; 
+3、autoconf ; 
+4、autoheader ; 
+5、automake ; 
+6、./configure ; 
+7、make ; 
+8、make install ; 
+9、make distcheck ; 
+10、make distclean ；
+
+具体操作细节如下：
+
+首先，要创建一个用来进行操作的目录，如：hello，并将源文件hello.c复制到这个目录下。
+
+执行autoscan命令，hello目录下会生产configure.scan文件，将此文件名称改为configure.in或者configure.ac，修改configure.in文件为：
+
+# -*- Autoconf -*- 
+
+
+# Process this file with autoconf to produce a configure script. AC_PREREQ(2.61) 
+
+
+AC_INIT(FULL-PACKAGE-NAME, VERSION, BUG-REPORT-ADDRESS) AC_CONFIG_SRCDIR([hello.c]) 
+
+
+AC_CONFIG_HEADER([config.h]) 
+
+
+AM_INIT_AUTOMAKE(hello,1.0) 
+
+
+# Checks for programs. 
+
+
+AC_PROG_CC 
+
+
+# Checks for libraries. 
+
+
+# Checks for header files. 
+
+
+AC_HEADER_STDC 
+
+
+AC_CHECK_HEADERS([stdlib.h]) 
+
+
+# Checks for typedefs, structures, and compiler characteristics. 
+
+
+# Checks for library functions. 
+
+
+AC_OUTPUT(Makefile)
+
+
+接下来
+执行aclocal命令，系统会在hello目录下生成aclocal.m4文件
+
+创建Makefile.am文件，文件内容为：
+
+AUTOMAKE_OPTIONS=foreign
+bin_PROGRAMS=hello
+hello_SOURCES=hello.c
+
+执行autoconf命令，系统在hello目录下生成configure可执行文件
+
+执行autoheader命令，系统在hello目录下生成config.h.in文件
+
+执行automake -a命令，系统在hello目录下生成depcomp install-sh Makefile.in  missing等文件
+
+执行./configure命令，系统在hello目录下生成Makefile文件
+
+执行make &&　make install命令，系统编译并安装hello程序
+
+执行make distcheck命令，系统将安装程序打包成软件发布包
+
+执行make distclean命令，系统将删除./configure命令执行时产生的文件和Makefile.in文件
+ 
+ 
+ 
+ 

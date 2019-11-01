@@ -1,0 +1,207 @@
+Linux平台Makefile文件的编写基础篇
+去论坛讨论 来源： 作者： 发布时间：2007-09-18 目的：
+        
+        基本掌握了 make 的用法，能在Linux系统上编程。
+        
+        环境：
+        
+        Linux系统，或者有一台Linux服务器，通过终端连接。一句话：有Linux编译环境。
+        
+        准备：
+        
+        准备三个文件：file1.c, file2.c, file2.h
+               file1.c:
+                      #include <stdio.h>
+                      #include "file2.h"
+                      int main()
+                      {
+                             printf("print file1$$$$$$$$$$$$$$$$$$$$$$$$\n");
+                             File2Print();
+                             return 0;
+                      } 
+               file2.h:
+
+                      #ifndef FILE2_H_
+                      #define    FILE2_H_
+
+                              #ifdef __cplusplus
+
+                                    extern "C" {
+
+                             #endif
+
+                             void File2Print();
+
+                             #ifdef __cplusplus
+
+                                    }
+
+                             #endif
+
+                      #endif
+
+
+               file2.c:
+                      #include "file2.h"
+                      void File2Print()
+                      {
+                             printf("Print file2**********************\n");
+                      }
+
+        基础：
+        
+        先来个例子：
+        有这么个Makefile文件。（文件和Makefile在同一目录）
+               === makefile 开始 ===
+                      helloworld:file1.o file2.o
+                             gcc file1.o file2.o -o helloworld
+
+                      file1.o:file1.c file2.h
+                             gcc -c file1.c -o file1.o
+
+                       file2.o:file2.c file2.h
+
+                             gcc -c file2.c -o file2.o
+
+
+                      clean:
+
+                             rm -rf *.o helloworld
+
+               === makefile 结束 ===
+
+        一个 makefile 主要含有一系列的规则，如下：
+        A: B
+        (tab)<command>
+        (tab)<command>
+
+        每个命令行前都必须有tab符号。
+
+        上面的makefile文件目的就是要编译一个helloworld的可执行文件。让我们一句一句来解释：
+
+               helloworld : file1.o file2.o：                 helloworld依赖file1.o file2.o两个目标文件。
+
+               gcc File1.o File2.o -o helloworld：      编译出helloworld可执行文件。-o表示你指定 的目标文件名。
+
+               file1.o : file1.c：    file1.o依赖file1.c文件。
+
+               gcc -c file1.c -o file1.o：                  编译出file1.o文件。-c表示gcc 只把给它的文件编译成目标文件， 用源码文件的文件名命名但把其后缀由“.c”或“.cc”变成“.o”。在这句中，可以省略-o file1.o，编译器默认生成file1.o文件，这就是-c的作用。
+
+                      file2.o : file2.c file2.h
+                      gcc -c file2.c -o file2.o
+
+        这两句和上两句相同。
+
+               clean:
+
+                      rm -rf *.o helloworld
+
+        当用户键入make clean命令时，会删除*.o 和helloworld文件。
+
+        如果要编译cpp文件，只要把gcc改成g++就行了。
+
+        写好Makefile文件，在命令行中直接键入make命令，就会执行Makefile中的内容了。
+
+        到这步我想你能编一个Helloworld程序了。
+
+       上一层楼：使用变量
+
+　　上面提到一句，如果要编译cpp文件，只要把gcc改成g++就行了。但如果Makefile中有很多gcc，那不就很麻烦了。
+
+               第二个例子：
+
+               === makefile 开始 ===
+                      OBJS = file1.o file2.o
+                      CC = gcc
+                      CFLAGS = -Wall -O -g
+
+                      helloworld : $(OBJS)
+                             $(CC) $(OBJS) -o helloworld
+
+                      file1.o : file1.c file2.h
+                             $(CC) $(CFLAGS) -c file1.c -o file1.o
+
+                      file2.o : file2.c file2.h
+                             $(CC) $(CFLAGS) -c file2.c -o file2.o
+
+                      clean:
+
+                             rm -rf *.o helloworld
+        === makefile 结束 ===
+
+　　这里我们应用到了变量。要设定一个变量，你只要在一行的开始写下这个变量的名字，后 面跟一个 = 号，后面跟你要设定的这个变量的值。以后你要引用 这个变量，写一个 $ 符号，后面是围在括号里的变量名。
+
+ 
+
+        CFLAGS = -Wall -O –g，解释一下。这是配置编译器设置，并把它赋值给CFFLAGS变量。
+
+        -Wall：          输出所有的警告信息。
+
+        -O：              在编译时进行优化。
+
+        -g：               表示编译debug版本。
+
+　　这样写的Makefile文件比较简单，但很容易就会发现缺点，那就是要列出所有的c文件。如果你添加一个c文件，那就需要修改Makefile文件，这在项目开发中还是比较麻烦的。
+
+        再上一层楼：使用函数
+
+　　学到这里，你也许会说，这就好像编程序吗？有变量，也有函数。其实这就是编程序，只不过用的语言不同而已。
+
+               第三个例子：
+
+               === makefile 开始 ===
+                      CC = gcc
+
+                      XX = g++
+                      CFLAGS = -Wall -O –g
+
+                      TARGET = ./helloworld
+
+                      %.o: %.c
+
+                             $(CC) $(CFLAGS) -c $< -o $@
+
+                      %.o:%.cpp
+
+                             $(XX) $(CFLAGS) -c $< -o $@
+
+                      SOURCES = $(wildcard *.c *.cpp)
+                      OBJS = $(patsubst %.c,%.o,$(patsubst %.cpp,%.o,$(SOURCES)))
+
+                      $(TARGET) : $(OBJS)
+                             $(XX) $(OBJS) -o $(TARGET)
+
+                             chmod a+x $(TARGET)
+
+        clean:
+
+               rm -rf *.o helloworld
+        === makefile 结束 ===
+
+        函数1：wildcard
+
+　　产生一个所有以 '.c' 结尾的文件的列表。
+
+　　SOURCES = $(wildcard *.c *.cpp)表示产生一个所有以 .c，.cpp结尾的文件的列表，然后存入变量 SOURCES 里。
+
+        函数2：patsubst
+
+　　匹配替换，有三个参数。第一个是一个需要匹配的式样，第二个表示用什么来替换它，第三个是一个需要被处理的由空格分隔的列表。
+
+　　OBJS = $(patsubst %.c,%.o,$(patsubst %.cc,%.o,$(SOURCES)))表示把文件列表中所有的.c,.cpp字符变成.o，形成一个新的文件列表，然后存入OBJS变量中。
+
+        %.o: %.c
+
+               $(CC) $(CFLAGS) -c $< -o $@
+
+        %.o:%.cpp
+
+               $(XX) $(CFLAGS) -c $< -o $@
+
+　　这几句命令表示把所有的.c,.cpp编译成.o文件。
+
+　　这里有三个比较有用的内部变量。$@ 扩展成当前规则的目的文件名， $< 扩展成依靠       列表中的第一个依靠文件，而 $^ 扩展成整个依靠的列表（除掉了里面所有重 复的文件名）。
+
+               chmod a+x $(TARGET)表示把helloworld强制变成可执行文件。
+
+　　到这里，我想你已经能够编写一个比较简单也比较通用的Makefile文件了，上面所有的例子都假定所有的文件都在同一个目录下，不包括子目录。

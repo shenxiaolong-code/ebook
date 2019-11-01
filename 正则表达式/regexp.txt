@@ -1,0 +1,172 @@
+﻿匹配中文字符的正则表达式： [\u4e00-\u9fa5]
+
+匹配双字节字符(包括汉字在内)：[^\x00-\xff]
+
+应用：计算字符串的长度（一个双字节字符长度计2，ASCII字符计1）
+
+String.prototype.len=function(){return this.replace([^\x00-\xff]/g,"aa").length;}
+
+匹配空行的正则表达式：\n[\s| ]*\r
+
+匹配HTML标记的正则表达式：/<(.*)>.*<\/\1>|<(.*) \/>/ 
+
+匹配首尾空格的正则表达式：(^\s*)|(\s*$)
+
+应用：javascript中没有像vbscript那样的trim函数，我们就可以利用这个表达式来实现，如下：
+
+String.prototype.trim = function()
+{
+    return this.replace(/(^\s*)|(\s*$)/g, "");
+}
+
+利用正则表达式分解和转换IP地址：
+
+下面是利用正则表达式匹配IP地址，并将IP地址转换成对应数值的Javascript程序：
+
+function IP2V(ip)
+{
+ re=/(\d+)\.(\d+)\.(\d+)\.(\d+)/g  //匹配IP地址的正则表达式
+if(re.test(ip))
+{
+return RegExp.$1*Math.pow(255,3))+RegExp.$2*Math.pow(255,2))+RegExp.$3*255+RegExp.$4*1
+}
+else
+{
+ throw new Error("Not a valid IP address!")
+}
+}
+
+不过上面的程序如果不用正则表达式，而直接用split函数来分解可能更简单，程序如下：
+
+var ip="10.100.20.168"
+ip=ip.split(".")
+alert("IP值是："+(ip[0]*255*255*255+ip[1]*255*255+ip[2]*255+ip[3]*1))
+
+匹配Email地址的正则表达式：\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*
+
+匹配网址URL的正则表达式：http://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?
+
+利用正则表达式去除字串中重复的字符的算法程序：[注：此程序不正确，原因见本贴回复]
+
+var s="abacabefgeeii"
+var s1=s.replace(/(.).*\1/g,"$1")
+var re=new RegExp("["+s1+"]","g")
+var s2=s.replace(re,"") 
+alert(s1+s2)  //结果为：abcefgi
+
+我原来在CSDN上发贴寻求一个表达式来实现去除重复字符的方法，最终没有找到，这是我能想到的最简单的实现方法。思路是使用后向引用取出包括重复的字符，再以重复的字符建立第二个表达式，取到不重复的字符，两者串连。这个方法对于字符顺序有要求的字符串可能不适用。
+
+得用正则表达式从URL地址中提取文件名的javascript程序，如下结果为page1
+
+s="http://www.9499.net/page1.htm"
+s=s.replace(/(.*\/){0,}([^\.]+).*/ig,"$2")
+alert(s)
+
+利用正则表达式限制网页表单里的文本框输入内容：
+
+用正则表达式限制只能输入中文：onkeyup="value=value.replace(/[^\u4E00-\u9FA5]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\u4E00-\u9FA5]/g,''))"
+
+用正则表达式限制只能输入全角字符： onkeyup="value=value.replace(/[^\uFF00-\uFFFF]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\uFF00-\uFFFF]/g,''))"
+
+用正则表达式限制只能输入数字：onkeyup="value=value.replace(/[^\d]/g,'') "onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))"
+
+用正则表达式限制只能输入数字和英文：onkeyup="value=value.replace(/[\W]/g,'') "onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))"
+
+^\d+$　　//匹配非负整数（正整数 + 0） 
+^[0-9]*[1-9][0-9]*$　　//匹配正整数 
+^((-\d+)|(0+))$　　//匹配非正整数（负整数 + 0） 
+^-[0-9]*[1-9][0-9]*$　　//匹配负整数 
+^-?\d+$　　　　//匹配整数 
+^\d+(\.\d+)?$　　//匹配非负浮点数（正浮点数 + 0） 
+^(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*))$　　//匹配正浮点数 
+^((-\d+(\.\d+)?)|(0+(\.0+)?))$　　//匹配非正浮点数（负浮点数 + 0） 
+^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$　　//匹配负浮点数 
+^(-?\d+)(\.\d+)?$　　//匹配浮点数 
+^[A-Za-z]+$　　//匹配由26个英文字母组成的字符串 
+^[A-Z]+$　　//匹配由26个英文字母的大写组成的字符串 
+^[a-z]+$　　//匹配由26个英文字母的小写组成的字符串 
+^[A-Za-z0-9]+$　　//匹配由数字和26个英文字母组成的字符串 
+^\w+$　　//匹配由数字、26个英文字母或者下划线组成的字符串 
+^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$　　　　//匹配email地址 
+^[a-zA-z]+://匹配(\w+(-\w+)*)(\.(\w+(-\w+)*))*(\?\S*)?$　　//匹配url 
+利用正则表达式去除字串中重复的字符的算法程序： 
+
+var s="abacabefgeeii" 
+var s1=s.replace(/(.).*\1/g,"$1") 
+var re=new RegExp("["+s1+"]","g") 
+var s2=s.replace(re,"") 
+alert(s1+s2) //结果为：abcefgi 
+1.确认有效电子邮件格式 
+下面的代码示例使用静态 Regex.IsMatch 方法验证一个字符串是否为有效电子邮件格式。如果字符串包含一个有效的电子邮件地址，则 IsValidEmail 方法返回 true，否则返回 false，但不采取其他任何操作。您可以使用 IsValidEmail，在应用程序将地址存储在数据库中或显示在 ASP.NET 页中之前，筛选出包含无效字符的电子邮件地址。 
+
+[Visual Basic] 
+Function IsValidEmail(strIn As String) As Boolean 
+' Return true if strIn is in valid e-mail format. 
+Return Regex.IsMatch(strIn, ("^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$") 
+End Function 
+[C#] 
+bool IsValidEmail(string strIn) 
+{ 
+// Return true if strIn is in valid e-mail format. 
+return Regex.IsMatch(strIn, @"^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$"); 
+} 
+
+
+2.清理输入字符串 
+下面的代码示例使用静态 Regex.Replace 方法从字符串中抽出无效字符。您可以使用这里定义的 CleanInput 方法，清除掉在接受用户输入的窗体的文本字段中输入的可能有害的字符。CleanInput 在清除掉除 @、-（连字符）和 .（句点）以外的所有非字母数字字符后返回一个字符串。 
+
+[Visual Basic] 
+Function CleanInput(strIn As String) As String 
+' Replace invalid characters with empty strings. 
+Return Regex.Replace(strIn, "[^\w\.@-]", "") 
+End Function 
+[C#] 
+String CleanInput(string strIn) 
+{ 
+// Replace invalid characters with empty strings. 
+return Regex.Replace(strIn, @"[^\w\.@-]", ""); 
+} 
+
+
+3.更改日期格式 
+以下代码示例使用 Regex.Replace 方法来用 dd-mm-yy 的日期形式代替 mm/dd/yy 的日期形式。 
+
+[Visual Basic] 
+Function MDYToDMY(input As String) As String 
+Return Regex.Replace(input, _ 
+"\b(?<month>\d{1,2})/(?<day>\d{1,2})/(?<year>\d{2,4})\b", _ 
+"${day}-${month}-${year}") 
+End Function 
+[C#] 
+String MDYToDMY(String input) 
+{ 
+return Regex.Replace(input, 
+"\\b(?<month>\\d{1,2})/(?<day>\\d{1,2})/(?<year>\\d{2,4})\\b", 
+"${day}-${month}-${year}"); 
+} 
+Regex 替换模式 
+本示例说明如何在 Regex.Replace 的替换模式中使用命名的反向引用。其中，替换表达式 ${day} 插入由 (?<day>...) 组捕获的子字符串。 
+
+有几种静态函数使您可以在使用正则表达式操作时无需创建显式正则表达式对象，而 Regex.Replace 函数正是其中之一。如果您不想保留编译的正则表达式，这将给您带来方便 
+
+
+4.提取 URL 信息 
+以下代码示例使用 Match.Result 来从 URL 提取协议和端口号。例如，“http://www.contoso.com:8080/letters/readme.html”将返回“http:8080”。 
+
+[Visual Basic] 
+Function Extension(url As String) As String 
+Dim r As New Regex("^(?<proto>\w+)://[^/]+?(?<port>:\d+)?/", _ 
+RegexOptions.Compiled) 
+Return r.Match(url).Result("${proto}${port}") 
+End Function 
+[C#] 
+String Extension(String url) 
+{ 
+Regex r = new Regex(@"^(?<proto>\w+)://[^/]+?(?<port>:\d+)?/", 
+RegexOptions.Compiled); 
+return r.Match(url).Result("${proto}${port}"); 
+} 
+
+今天有网友问：如何用正则表达式表示要么是数字要么是字母 是字母的话只能是一个字母 数字则无所谓？ 
+我的回答是： 
+^[a-zA-Z]$|^\d+$ 

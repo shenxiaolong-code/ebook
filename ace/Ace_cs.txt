@@ -1,0 +1,331 @@
+ACE的目标用户是高性能和实时通信服务和应用的开发者。它简化了使用进程间通信、事件多路分离、显式动态链接和并发的OO网络应用和服务的开发。此外，通过服务在运行时与应用的动态链接，ACE还使系统的配置和重配置得以自动化。
+　　我最近采用ACE实现了一个通用的C/S架构通信程序，具体实现简述如下：
+　　1． 服务器端：一个采用领导者/跟随者模型的线程池不断地接受从多个客户端发来的消息，并放入一个消息队列，然后又有一个采用半同步/半异步模型的线程池不断地从这个消息队列中取出消息进行处理。
+　　服务器端代码如下：（共10个文件）
+　　ACE_Server.cpp
+　　#include "ace/SOCK_Acceptor.h"
+　　#include "ace/Acceptor.h"
+　　#include "ace/Thread_Manager.h"
+　　#include "ace/TP_Reactor.h"
+　　#include "ace/Reactor.h"
+　　#include "ace/INET_Addr.h"
+　　#include "ace/OS.h"
+　　#include "Request_Handler.h"
+　　#include "Server.h"
+　　#include "Constants.h"
+　　using namespace ACE_Server;
+　　int main(int argc, char *argv[])
+　　{
+　　 ACE_TP_Reactor tp_reactor;
+　　 ACE_Reactor reactor(&tp_reactor, 1);
+　　 ACE_Reactor::instance(&reactor, 1);
+　　 ACE_Acceptor<Request_Handler, ACE_SOCK_ACCEPTOR> acceptor;
+　　 ACE_INET_Addr addr(SERVER_PORT_NUM);
+　　 if(acceptor.open(addr) == -1)
+　　 return -1;
+　　 Server server_tp;
+　　 server_tp.activate(THR_NEW_LWP | THR_JOINABLE, SERVER_THREAD_POOL_SIZE);
+　　 ACE_Thread_Manager::instance()->wait();
+　　 return 0;
+　　}
+　　Constants.h
+　　#ifndef __CONSTANTS_H_
+　　#define __CONSTANTS_H_
+　　namespace ACE_Server
+　　{
+　　 static const size_t SERVER_THREAD_POOL_SIZE = 5; //进行数据接收的线程池大小
+　　 static const size_t TASK_THREAD_POOL_SIZE = 5; //进行数据处理的线程池大小
+　　 static const size_t BUFFER_SIZE = 4096; //数据缓冲区大小
+　　 static const size_t SERVER_PORT_NUM = 10101; //服务器的通信端口号
+　　}
+　　#endif
+　　Server.h
+　　#ifndef __SERVER_H_
+　　#define __SERVER_H_
+　　#include "ace/Task.h"
+　　namespace ACE_Server
+　　{
+　　 class Server: public ACE_Task_Base
+　　 {
+　　 public:
+　　 virtual int svc(void);
+　　 };
+　　}
+　　#endif
+　　Server.cpp
+　　#include "ace/Reactor.h"
+　　#include "Server.h"
+　　namespace ACE_Server
+　　{
+　　 int Server::svc(void)
+　　 {
+　　 int result = ACE_Reactor::instance()->run_reactor_event_loop();
+　　 if(result == -1)
+　　 return -1;
+　　 return 0;
+　　 }
+　　}
+　　Request_Handler.h
+　　#ifndef __REQUEST_HANDLER_H_
+　　#define __REQUEST_HANDLER_H_
+　　#include "ace/Svc_Handler.h"
+　　#include "ace/SOCK_Stream.h"
+　　#include "ace/Synch.h"
+　　#include "ace/Thread_Manager.h"
+　　#include "Task_Manager.h"
+　　namespace ACE_Server
+　　{
+　　 class Request_Handler: public ACE_Svc_Handler<ACE_SOCK_STREAM, ACE_MT_SYNCH>
+　　 {
+　　 public:
+　　 Request_Handler(ACE_Thread_Manager *thr_mgr = 0);
+　　 protected:
+　　 virtual int handle_input(ACE_HANDLE fd = ACE_INVALID_HANDLE);
+　　 private:
+　　 static Task_Manager task_mgr;
+　　 };
+　　}
+　　#endif
+　　Request_Handler.cpp
+　　#include "ace/OS.h"
+　　#include "ace/Message_Block.h"
+　　#include "ace/Thread_Manager.h"
+　　#include "ace/Svc_Handler.h"
+　　#include "ace/SOCK_Stream.h"
+　　#include "ace/Synch.h"
+　　#include "ace/Reactor.h"
+　　#include "Request_Handler.h"
+　　#include "Task_Manager.h"
+　　#include "Constants.h"
+　　namespace ACE_Server
+　　{
+　　 Task_Manager Request_Handler::task_mgr;
+　　 Request_Handler::Request_Handler(ACE_Thread_Manager *thr_mgr): ACE_Svc_Handler<ACE_SOCK_STREAM, ACE_MT_SYNCH> (thr_mgr)
+　　 {
+　　 this->reactor(ACE_Reactor::instance());
+　　 task_mgr.activate();
+　　 }
+　　 int Request_Handler::handle_input(ACE_HANDLE fd)
+　　 {
+　　 char length[4] = {0};
+　　 if(this->peer().recv_n(length, 4) == 4)
+　　 {
+　　 size_t msg_len = 0;
+　　 for(int i = 0; i < 4; i++)
+　　 {
+　　 msg_len |= (size_t)length[i] << (8 * i);
+　　 }
+　　 char msg[BUFFER_SIZE] = {0};
+　　 if(this->peer().recv_n(msg, msg_len) == msg_len)
+　　 {
+　　 ACE_Message_Block *mb = NULL;
+　　 ACE_NEW_RETURN(mb, ACE_Message_Block(msg_len, ACE_Message_Block::MB_DATA, 0, msg), -1);
+　　 mb->wr_ptr(msg_len);
+　　 task_mgr.putq(mb);
+　　 return 0;
+　　 }
+　　 }
+　　 return -1;
+　　 }
+　　}
+　　Task_Manager.h
+　　#ifndef __TASK_MANAGER_H_
+　　#define __TASK_MANAGER_H_
+　　#include "ace/Task.h"
+　　#include "ace/Synch.h"
+　　namespace ACE_Server
+　　{
+　　 class Task_Manager: public ACE_Task<ACE_MT_SYNCH>
+　　 {
+　　 public:
+　　 virtual int svc(void);
+　　 };
+　　}
+　　#endif
+　　Task_Manager.cpp
+　　#include "ace/Message_Block.h"
+　　#include "Task_Manager.h"
+　　#include "Task_Worker.h"
+　　#include "Constants.h"
+　　namespace ACE_Server
+　　{
+　　 int Task_Manager::svc(void)
+　　 {
+　　 Task_Worker task_tp;
+　　 task_tp.activate(THR_NEW_LWP | THR_JOINABLE, TASK_THREAD_POOL_SIZE);
+　　 while(1)
+　　 {
+　　 ACE_Message_Block *mb = NULL;
+　　 if(this->getq(mb) < 0)
+　　 {
+　　 task_tp.msg_queue()->deactivate();
+　　 task_tp.wait();
+　　 }
+　　 task_tp.putq(mb);
+　　 }
+　　 return 0;
+　　 }
+　　}
+　　Task_Worker.h
+　　#ifndef __TASK_WORKER_H_
+　　#define __TASK_WORKER_H_
+　　#include "ace/Task.h"
+　　#include "ace/Synch.h"
+　　#include "ace/Message_Block.h"
+　　namespace ACE_Server
+　　{
+　　 class Task_Worker: public ACE_Task<ACE_MT_SYNCH>
+　　 {
+　　 public:
+　　 virtual int svc(void);
+　　 private:
+　　 void process_task(ACE_Message_Block *mb);
+　　 };
+　　}
+　　#endif
+　　Task_Worker.cpp
+　　#include "ace/OS.h"
+　　#include "ace/Message_Block.h"
+　　#include "Task_Worker.h"
+　　namespace ACE_Server
+　　{
+　　 int Task_Worker::svc(void)
+　　 {
+　　 while(1)
+　　 {
+　　 ACE_Message_Block *mb = NULL;
+　　 if(this->getq(mb) == -1)
+　　 {
+　　 continue;
+　　 }
+　　 process_task(mb);
+　　 }
+　　 return 0;
+　　 }
+　　 void Task_Worker::process_task(ACE_Message_Block *mb)
+　　 {
+　　 //进行数据处理,数据的起始地址为mb->rd_ptr(),长度为mb->length()
+　　 ACE_DEBUG((LM_DEBUG, ACE_TEXT("(%t) Processing task: %s length %d\n"), mb->rd_ptr(), mb->length()));
+　　 ACE_OS::sleep(3); //模拟数据处理过程
+　　 mb->release();
+　　 }
+　　}
+　　2． 客户端：应用程序将需要发送的若干消息放入一个消息队列，然后激活一个线程来发送所有消息到服务器端。
+　　客户端代码如下：（共4个文件）
+　　ACE_Client.cpp
+　　#include "Client.h"
+　　using namespace ACE_Client;
+　　int main(int argc, char *argv[])
+　　{
+　　 Client client("localhost"); //服务器的IP地址或者服务器名称
+　　 for(int i = 0; i < 5; i++)
+　　 {
+　　 char *task1 = "Is it a good day?"; //第1个task的数据
+　　 size_t task1_len = 18; //第1个task的数据长度
+　　 char *task1_t; //无需修改
+　　 ACE_NEW_RETURN(task1_t, char[task1_len + 4], -1); //无需修改
+　　 client.put_task(task1_t, task1, task1_len); //无需修改
+　　 char *task2 = "Yeah, it really is."; //第2个task的数据
+　　 size_t task2_len = 20; //第2个task的数据长度
+　　 char *task2_t; //无需修改
+　　 ACE_NEW_RETURN(task2_t, char[task2_len + 4], -1); //无需修改
+　　 client.put_task(task2_t, task2, task2_len); //无需修改
+　　 client.send_tasks(); //将上面的task全部发到服务器
+　　 delete [] task1_t; //释放task1的内存
+　　 delete [] task2_t; //释放task2的内存
+　　 }
+　　 return 0;
+　　}
+　　Constants.h
+　　#ifndef __CONSTANTS_H_
+　　#define __CONSTANTS_H_
+　　#include "ace/Time_Value.h"
+　　namespace ACE_Client
+　　{
+　　 static const size_t BUFFER_SIZE = 4096; //数据缓冲区大小
+　　 static const size_t SERVER_PORT_NUM = 10101; //服务器的通信端口号
+　　 static const ACE_Time_Value TIME_INTERVAL(0, 1000000); //两次数据发送之间的时间间隔(0 s + 1000000 us = 1 s)
+　　}
+　　#endif
+　　Client.h
+　　#ifndef __CLIENT_H_
+　　#define __CLIENT_H_
+　　#include "ace/Task.h"
+　　#include "ace/INET_Addr.h"
+　　#include "ace/Synch.h"
+　　namespace ACE_Client
+　　{
+　　 class Client: public ACE_Task<ACE_NULL_SYNCH>
+　　 {
+　　 public:
+　　 Client(char *server);
+　　 virtual int svc(void);
+　　 char *put_task(char *msg_t, char *msg_s, size_t msg_len);
+　　 void send_tasks(void);
+　　 private:
+　　 ACE_INET_Addr addr;
+　　 };
+　　}
+　　#endif
+　　Client.cpp
+　　#include "ace/OS.h"
+　　#include "ace/SOCK_Stream.h"
+　　#include "ace/SOCK_Connector.h"
+　　#include "ace/Message_Block.h"
+　　#include "ace/Thread_Manager.h"
+　　#include "ace/INET_Addr.h"
+　　#include "Constants.h"
+　　#include "Client.h"
+　　namespace ACE_Client
+　　{
+　　 Client::Client(char *server)
+　　 {
+　　 addr = ACE_INET_Addr(SERVER_PORT_NUM, server);
+　　 }
+　　 int Client::svc(void)
+　　 {
+　　 ACE_SOCK_Stream stream;
+　　 ACE_SOCK_Connector connector;
+　　 if(connector.connect(stream, addr) < 0)
+　　 {
+　　 return -1;
+　　 }
+　　 else
+　　 {
+　　 while(1)
+　　 {
+　　 ACE_Message_Block *mb = NULL;
+　　 if(this->getq(mb) == -1)
+　　 {
+　　 
+　　break;
+　　 }
+　　 ACE_DEBUG((LM_DEBUG, ACE_TEXT("(%t) Sending %s\n"), &(mb->rd_ptr()[4])));
+　　 stream.send_n(mb->rd_ptr(), mb->length());
+　　 mb->release();
+　　 ACE_OS::sleep(TIME_INTERVAL);
+　　 }
+　　 }
+　　 stream.close();
+　　 return 0;
+　　 }
+　　 char *Client::put_task(char *msg_t, char *msg_s, size_t msg_len)
+　　 {
+　　 for(int i = 0; i < 4; i++)
+　　 {
+　　 msg_t[i] = (char)((msg_len >> (8 * i)) & 0xff);
+　　 }
+　　 ACE_OS::memcpy(&msg_t[4], msg_s, msg_len);
+　　 ACE_Message_Block *mb = NULL;
+　　 ACE_NEW_RETURN(mb, ACE_Message_Block(msg_len + 4, ACE_Message_Block::MB_DATA, 0, msg_t), 0);
+　　 mb->wr_ptr(msg_len + 4);
+　　 this->putq(mb);
+　　 return msg_t;
+　　 }
+　　 void Client::send_tasks(void)
+　　 {
+　　 this->activate();
+　　 ACE_Thread_Manager::instance()->wait();
+　　 }
+　　}
+　　全部完毕，希望大家能够喜欢：）

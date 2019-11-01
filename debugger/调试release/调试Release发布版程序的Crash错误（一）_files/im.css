@@ -1,0 +1,44 @@
+@charset "utf-8";
+/* CSS Document */
+.clear{clear:both; height:0; overflow:hidden; line-height:1%;}
+.box_bg{width:246px; height:188px; background:url(../images/im/box_bg.png)!important;_background:none;}
+
+.imBoxBg{width:244px; padding-top:2px; height:184px; background:url(../images/im/imbg_02.gif) no-repeat; color:#43609C; position:relative;font-size:12px;font-family:"宋体";}
+.imBoxBg a {text-decoration:none; color:#43609C;}
+.imBoxBg a:hover {text-decoration:underline; color:#CC0000;}
+
+.imgBoxbg2{width:240px; height:172px; background:url(../images/im/imbg_04.gif) no-repeat; margin-left:2px;}
+.imgBoxbg2 .conn{ padding:15px; padding-top:13px;}
+.imgBoxbg2 .conn .title{color:#666;}
+.mar5{ margin-right:5px;}
+.imgBoxbg2 .conn .title img{width:30px; height:30px; border:1px solid #DCDCDC; vertical-align:-10px;}
+.imgBoxbg2 .conn .title a{font-weight:bold;}
+.imgBoxbg2 .connBox{ margin-top:8px; line-height:20px; word-break:break-all; height:82px; overflow:hidden; word-wrap:break-word; }
+
+.imBoxBg .conn{ padding:15px; padding-top:13px;}
+.imBoxBg .conn .title{color:#666;}
+.mar5{ margin-right:5px;}
+.imBoxBg .conn .title img{width:30px; height:30px; border:1px solid #DCDCDC; vertical-align:-10px;}
+.imBoxBg .conn .title a{font-weight:bold;}
+.imBoxBg .connBox{ margin-top:8px; line-height:20px; word-break:break-all; height:82px; overflow:hidden; word-wrap:break-word; }
+
+.imbottom{position:absolute; bottom:20px; left:10px; right:0; line-height:20px; width:235px;}
+.imbottom img{ vertical-align:-3px;}
+.imbottom span{float:right; margin-right:12px; line-height:20px;_vertical-align:3px;}
+.imbottom span a{ text-decoration:none;}
+.imbottom span a:hover{ text-decoration:none;}
+.imbottom span a:hover em{ text-decoration:underline; font-style:normal;}
+.imbottom em{font-style:normal;}
+
+.im2Bg{width:246px; height:32px; background:url(../images/im/box_bg4.png)!important;background:none;}
+.im2{width:244px; height:28px; position:relative;padding-top:2px; background:url(../images/im/imbg_03.gif) no-repeat; line-height:30px;font-size:12px; font-family:"宋体";}
+.im2 a {text-decoration:none; color:#43609C;}
+.im2 a:hover {text-decoration:underline; color:#CC0000;}
+.im2_bg2{width:240px; height:26px;margin-left:2px;background:url(../images/im/imbg_05.gif) no-repeat;}
+.im2 img{ vertical-align:-5px; _vertical-align:-10px; margin-left:15px;}
+.im2 a strong{_vertical-align:-5px;}
+.im2 span{float:right; margin-right:12px; line-height:30px;_vertical-align:3px;}
+.im2 span a{ text-decoration:none;}
+.im2 span a:hover{ text-decoration:none;}
+.im2 span a:hover em{ text-decoration:underline;}
+.im2 em{font-style:normal;}

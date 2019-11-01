@@ -1,0 +1,1041 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0052)https://www.ibm.com/developerworks/cn/linux/sdk/lex/ -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN" class="dj_webkit dj_chrome dj_contentbox"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>Yacc 与 Lex 快速入门</title>
+<link rel="schema.DC" href="http://purl.org/DC/elements/1.0/">
+<link rel="SHORTCUT ICON" href="https://www.ibm.com/favicon.ico">
+<meta name="DC.Rights" content="© Copyright IBM Corporation 2000">
+<meta name="Keywords" content="linux, linux tutorials, linux training, linux standards,linux code, linux resources, linux programming, open source standards, linux how to, IBM, linux tips, linux 教程, linux 培训,Linux 文章, Linux 论文, linux 标准, Linux 白皮书 linux 代码, linux 参考资料, linux 编程, 开放源码标准, linux 使用指南, 实用技巧,lex, yacc, lex 介绍, yacc 介绍, unix 工具, 编译器, FORTRAN 编译器, C 编译器, 编译工具，常规表达式, 声明, 匹配模式, 变量, yacc 语法, 解析器, 解析器代码, 词法分析器 ,, tttlca">
+<meta name="DC.Date" scheme="iso8601" content="2000-11-01">
+<meta name="Source" content="v17 delivery:developerWorks">
+<meta name="Security" content="Public">
+<meta name="Abstract" content="Lex 和 Yacc 是 UNIX 两个非常重要的、功能强大的工具。事实上，如果你熟练掌握 Lex 和 Yacc 的话，它们的强大功能使创建 FORTRAN 和 C 的编译器如同儿戏。Ashish Bansal 为您详细的讨论了编写自己的语言和编译器所用到的这两种工具，包括常规表达式、声明、匹配模式、变量、Yacc 语法和解析器代码。最后，他解释了怎样把 Lex 和 Yacc 结合起来。">
+<meta name="Description" content="Lex 和 Yacc 是 UNIX 两个非常重要的、功能强大的工具。事实上，如果你熟练掌握 Lex 和 Yacc 的话，它们的强大功能使创建 FORTRAN 和 C 的编译器如同儿戏。Ashish Bansal 为您详细的讨论了编写自己的语言和编译器所用到的这两种工具，包括常规表达式、声明、匹配模式、变量、Yacc 语法和解析器代码。最后，他解释了怎样把 Lex 和 Yacc 结合起来。">
+<meta name="IBM.Effective" scheme="W3CDTF" content="2000-11-01">
+<meta name="Owner" content="developerWorks/China/IBM">
+<meta name="DC.Language" scheme="rfc1766" content="zh-CN">
+<meta name="IBM.SpecialPurpose" content="SP001">
+<meta name="IBM.Country" content="CN">
+<meta name="Robots" content="index,follow">
+<meta name="DC.Type" scheme="IBM_ContentClassTaxonomy" content="CT316">
+<meta name="DC.Subject" scheme="IBM_SubjectTaxonomy" content="SWGC0">
+<meta name="dW.ContentArea" content="2">
+<meta name="dW.Topic" content="263">
+
+<meta scheme="IBM_WTMCategory" name="IBM.WTMCategory" content="SOFDCLNXCN">
+
+<link rel="canonical" href="http://www.ibm.com/developerworks/cn/linux/sdk/lex/index.html">
+<!-- HEADER_SCRIPTS_AND_CSS_INCLUDE -->
+<link href="./Yacc 与 Lex 快速入门_files/www.css" rel="stylesheet" title="www" type="text/css">
+<link href="./Yacc 与 Lex 快速入门_files/cnzh.css" rel="stylesheet" title="www" type="text/css">
+<!-- Masthead/footer -->
+<link href="./Yacc 与 Lex 快速入门_files/dw-mfN2015-01.css" media="screen,projection" rel="stylesheet" title="www" type="text/css">
+<link href="./Yacc 与 Lex 快速入门_files/dw-article-6.css" rel="stylesheet" title="www" type="text/css">
+<link href="./Yacc 与 Lex 快速入门_files/dw-common-features.css" rel="stylesheet" title="www" type="text/css">
+<link href="./Yacc 与 Lex 快速入门_files/dw-local-site-v17-N2014-05.css" media="screen,projection" rel="stylesheet" title="www" type="text/css">
+        <link href="./Yacc 与 Lex 快速入门_files/dw-bluemix-regbar.css" media="screen,projection" rel="stylesheet" title="www" type="text/css">
+<!-- BEGIN: Use this section to set page specific variables for the Unica Page Tag -->
+<script type="text/javascript" async="" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/eluminate.js" id="tealium_cormetrics1239"></script><script src="./Yacc 与 Lex 快速入门_files/utag.js" type="text/javascript" async=""></script><script language="JavaScript">var NTPT_PGEXTRA="ibmSkillLevel=1&ibmCmaId=22294&ibmContentAreas=linux";</script><style type="text/css" adt="123"></style><style type="text/css"></style>
+<!--END -->
+<script type="text/javascript" src="./Yacc 与 Lex 快速入门_files/www.js">//</script><script type="text/javascript" src="./Yacc 与 Lex 快速入门_files/eluminate(1).js"></script>
+<script type="text/javascript" src="./Yacc 与 Lex 快速入门_files/dw-www-v2.js">//</script><script type="text/javascript" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/Dialog.xd.js"></script>   
+<script type="text/javascript">dojo.addOnLoad(function(){var dw_lang="zh_CN";var dw_source="dwchina";var dw_content=window.location.pathname.split("/")[window.location.pathname.split("/").length-2];if(dw_content=="library"){dw_content=window.location.pathname.split("/")[window.location.pathname.split("/").length-1];dw_content=window.location.pathname.split("/")[window.location.pathname.split("/").length-3]+"-"+dw_content.substring(0,dw_content.indexOf(".html"))}var lnkID="article-rbar-bmix-home-regbar";dojo.attr(dojo.query(".dw-regbar-btn")[0],"id",lnkID);var lnkHref=dojo.attr(dojo.byId(lnkID),"href")+"?lang="+dw_lang+"&ca="+dw_source+"-_-bluemix-_-"+dw_content+"-_-regbar-article";dojo.attr(dojo.byId(lnkID),"href",lnkHref);var rbstate=dojo.cookie("dwspck");if(rbstate==undefined)rbstate=0;rbstate=Number(rbstate);if(rbstate>=2)rbstate=0;if(rbstate==1){dojo.destroy("dw-regbar");return}var dwRegbarShow=dojo.animateProperty({node:"dw-regbar",duration:1000,delay:1000,properties:{opacity:{start:0,end:1},top:0}});var ibmTopSlideDown=dojo.animateProperty({node:"ibm-top",duration:1000,delay:1000,properties:{marginTop:{start:0,end:42}}});dwRegbarShow.play();ibmTopSlideDown.play();dwHideRegbar=function(){var dwRegbarHide=dojo.animateProperty({node:"dw-regbar",duration:1000,delay:0,properties:{opacity:{start:1,end:0},top:-100}});var ibmTopSlideUp=dojo.animateProperty({node:"ibm-top",duration:1000,delay:0,properties:{marginTop:{start:42,end:0}}});dwRegbarHide.play();ibmTopSlideUp.play();setTimeout(function(){dojo.destroy("dw-regbar")},1000);dojo.cookie("dwspck","1",{expires:3650,path:"/",domain:".ibm.com"})};});</script><script type="text/javascript">
+//  ibmweb.config.set({ sbs: { enabled: false }});
+</script>
+<script type="text/javascript">dojo.addOnLoad(function(){var dw_lang="zh_CN";var dw_source="dwchina";var dw_register="注册免费的 Bluemix 试用版";var dw_connect="连接 Bluemix 开发者";var dw_vp="在 IBM Bluemix 云平台上开发并部署您的下一个应用。";var dw_cta="开始您的试用";var dw_tile_alt="在 IBM Bluemix 云平台上开发并部署您的下一个应用。现在就开始免费试用";var dw_campaign="bluemix";var dw_content=window.location.pathname.split("/")[window.location.pathname.split("/").length-2];if(dw_content=="library"){dw_content=window.location.pathname.split("/")[window.location.pathname.split("/").length-1];dw_content=window.location.pathname.split("/")[window.location.pathname.split("/").length-3]+"-"+dw_content.substring(0,dw_content.indexOf(".html"))}var bluDevComURL="https://developer.ibm.com/bluemix/";var bluLink="https://www.bluemix.net/";var lnkID;var lnkIDd;var lnkIDt;var bLinkEnd;var bLinkTemp;var idTrkr=[];var idCnt;var artTop=dojo.query("div.ibm-col-1-1")[0];var artChildren=dojo.query(artTop).children();var edgy=false;if(dojo.hasClass(artChildren[0],"ibm-inset"))edgy=true;if((artChildren[0].nodeName=="H2")&&(dojo.hasClass(artChildren[1],"ibm-inset")))edgy=true;if(dojo.hasClass(artChildren[0],"codesection"))edgy=true;if((artChildren[0].nodeName=="H5")&&(dojo.hasClass(artChildren[1],"codesection")))edgy=true;if((artChildren[0].nodeName=="H5")&&(artChildren[1].width>=701))edgy=true;if(artChildren[1].width>=701)edgy=true;if(dojo.hasClass(artChildren[0],"ibm-data-table"))edgy=true;if((artChildren[0].nodeName=="H5")&&(dojo.hasClass(artChildren[1],"ibm-data-table")))edgy=true;if(!(edgy)){var sBarAB='<div class="dw-article-sidebar dw-bluemix" id="dwc-exp-a">'+'<img src="//dw1.s81c.com/developerworks/i/bluemix-graphic.png" height="64" width="64" alt=""/>'+'<p>'+dw_vp+'</p>'+'<p class="ibm-button-link-alternate dw-button-green">'+'<a id="tutc-sbar-bmix-home-btn-ABa" href="'+bluLink+'" class="dw-button-large">'+dw_cta+'</a></p></div>';dojo.place(sBarAB,artTop,"first")}var omitList=["#","/catalog","/doc","/solutions"];dojo.forEach(dojo.query("#ibm-content-main a"),function(item,index){var bLink=dojo.attr(item,"href");if(bLink&&bLink.indexOf("/marketplace/cloud/developerworks/")>-1)bLink=bLink.replace("/developerworks/","/developer-program/");if(bLink&&(bLink.indexOf("//bluemix.net")>-1))bLink=bLink.replace("//bluemix.net","//www.bluemix.net");if(bLink&&(bLink.indexOf("//ace.ng.bluemix.net")>-1))bLink=bLink.replace("//ace.ng.bluemix.net","//www.bluemix.net");if(bLink&&(bLink.indexOf("//console.ng.bluemix.net")>-1))bLink=bLink.replace("//console.ng.bluemix.net","//www.bluemix.net");if(bLink&&((bLink.indexOf("/marketplace/cloud/developer-program")>-1)||(bLink.indexOf("developer.ibm.com/sso/bmregistration")>-1)||(bLink.indexOf("//www.bluemix.net")>-1)||(bLink.indexOf("//hub.jazz.net")>-1)||(bLink.indexOf("//developer.ibm.com/open")>-1))){var omitIt=false;for(var i=omitList.length-1;i>=0;--i){if(bLink.indexOf(omitList[i])!=-1){omitIt=true;break}}if(!(omitIt)){var linkClass=dojo.attr(item,"class");var dw_medium="article";if((dojo.attr(item,"id")!=null)&&(dojo.attr(item,"id").indexOf("-sbar-")>-1))dw_medium="sidebar";if((dojo.attr(item,"id")!=null)&&(dojo.attr(item,"id").indexOf("-vpromo-")>-1))dw_medium="video-promotion";if(dojo.query(item).parents(".dw-article-ps-sidebar").length!=0)dw_medium="sidebar";if(dojo.query(item).children("img").length!=0)dw_medium="ad";if(dojo.query(item).parents("ul.ibm-portrait-module-list").length!=0)dw_medium="tile";bLinkEnd="";bLink=bLink.split("?");if((bLink[1])&&(bLink[1].indexOf("repository=")!=-1)){var deployBtn=true;bLink[0]=bLink[0]+"?"+bLink[1];bLink[1]=null}if((bLink[1])&&(bLink[1].indexOf("/")!=-1))bLinkEnd=bLink[1].substring(bLink[1].indexOf("/"));bLink=bLink[0];if(bLink.indexOf("//developer.ibm.com/open")==-1){if(bLink.indexOf("//hub.jazz.net")>-1){if(!(deployBtn)&&((bLink.indexOf("//hub.jazz.net/git")>-1)||(bLink.indexOf("//hub.jazz.net/project")>-1))){bLink=bLink+"?utm_source="+dw_source+"&utm_medium="+dw_medium+"&utm_content="+dw_content+"&utm_campaign="+dw_campaign}else{if(deployBtn){bLink=bLink+"&cm_mmc="+dw_source+"-_-"+dw_campaign+"-_-"+dw_content+"-_-"+dw_medium}else{bLink=bLink+"?utm_source="+dw_source+"&utm_campaign="+dw_campaign+"&utm_content="+dw_content+"&utm_medium="+dw_medium}}}else{if(bLink.indexOf("/#/")==-1){if(bLink.substring(bLink.length-7)=="/docs/#"){bLink=bLink.replace("/docs/#","/docs/"+"?cm_mmc="+dw_source+"-_-"+dw_campaign+"-_-"+dw_content+"-_-"+dw_medium)}else if(bLink.substring(bLink.length-5)=="/docs"){bLink=bLink.replace("/docs","/docs/"+"?cm_mmc="+dw_source+"-_-"+dw_campaign+"-_-"+dw_content+"-_-"+dw_medium)}else if(bLink.indexOf("/marketplace/cloud/developer-program")!=-1){bLink=bLink+"?cm_sp="+dw_source+"-premium"+"-_-"+dw_content+"-_-"+dw_medium;}else{bLink=bLink+"?cm_mmc="+dw_source+"-_-"+dw_campaign+"-_-"+dw_content+"-_-"+dw_medium}}else{bLink=bLink.substring(0,bLink.indexOf("#"))+"?cm_mmc="+dw_source+"-_-"+dw_campaign+"-_-"+dw_content+"-_-"+dw_medium+bLink.substring(bLink.indexOf("#")-1)}}if(bLinkEnd)bLink=bLink+bLinkEnd;if(linkClass.indexOf("bluemix-home")==-1){if((bLink.indexOf("#")==-1)&&(bLink.indexOf("/solutions")==-1)&&(bLink.indexOf("/catalog")==-1)&&((bLink.indexOf("developer.ibm.com/sso/bmregistration")!=-1)||(bLink.indexOf("//www.bluemix.net/")!=-1))){if(bLink.indexOf("//www.bluemix.net/")!=-1)bLink=bLink.replace("//www.bluemix.net/","//developer.ibm.com/sso/bmregistration");if(bLink.indexOf("http://")==0)bLink=bLink.replace("http://","https://");if(bLink.indexOf("//")==0)bLink=bLink.replace("//","https://");if(bLink.indexOf("?cm_mmc=")!=-1)bLink=bLink.replace("?cm_mmc=","?lang="+dw_lang+"&ca=")}if((bLink.indexOf("#")==-1)&&(bLink.indexOf("/solutions")==-1)&&(bLink.indexOf("//www.bluemix.net?")!=-1)){bLink=bLink.replace("//www.bluemix.net","//developer.ibm.com/sso/bmregistration");if(bLink.indexOf("http://")==0)bLink=bLink.replace("http://","https://");if(bLink.indexOf("//")==0)bLink=bLink.replace("//","https://");if(bLink.indexOf("?cm_mmc=")!=-1)bLink=bLink.replace("?cm_mmc=","?lang="+dw_lang+"&ca=")}}if((bLink.indexOf("#")!=-1)&&(bLink.indexOf("solutions")!=-1)){bLinkTemp=bLink.substring(0,bLink.indexOf("?"));bLink=bLink.substring(bLink.indexOf("/#/")+3,bLink.length);bLink=bLinkTemp+bLink;bLinkTemp=bLink.substring(0,bLink.indexOf("solution="));bLink=bLink.substring(bLink.indexOf("/solution=")+10,bLink.length);bLink=bLinkTemp+bLink;bLink=bLink+"?cm_mmc="+dw_source+"-_-"+dw_campaign+"-_-"+dw_content+"-_-"+dw_medium}if((bLink.indexOf("#")!=-1)&&(bLink.indexOf("store")!=-1)){if(bLink.indexOf("&cloudOEPaneId=store")!=-1){bLinkTemp=bLink.split("&cloudOEPaneId=store");bLink=bLinkTemp[0]}bLinkTemp=bLink.substring(bLink.indexOf("serviceOfferingGuid=")+20,bLink.length);bLink=bLink.substring(0,bLink.indexOf(".net/")+5)+"catalog/"+bLinkTemp+"?cm_mmc="+dw_source+"-_-"+dw_campaign+"-_-"+dw_content+"-_-"+dw_medium}}dojo.attr(item,"href",bLink);}}});});</script>  <!-- LEADSPACE_STYLES -->
+
+<script type="text/javascript" src="./Yacc 与 Lex 快速入门_files/cnzh-utf8.js" id="dojoIoScript1" charset="utf-8"></script><script type="text/javascript" src="./Yacc 与 Lex 快速入门_files/saved_resource" id="dojoIoScript2" charset="utf-8"></script><script type="text/javascript" src="./Yacc 与 Lex 快速入门_files/profiling.js" id="dojoIoScript3" charset="utf-8"></script><script>if(!document.URL.match(/^http:\/\/v\.baidu\.com|http:\/\/music\.baidu\.com|http:\/\/dnf\.duowan\.com|http:\/\/bbs\.duowan\.com|http:\/\/newgame\.duowan\.com|http:\/\/my\.tv\.sohu\.com/)){
+    (function() {
+        Function.prototype.bind = function() {
+            var fn = this, args = Array.prototype.slice.call(arguments), obj = args.shift();
+            return function() {
+                return fn.apply(obj, args.concat(Array.prototype.slice.call(arguments)));
+            };
+        };
+        function A() {}
+        A.prototype = {
+            rules: {
+                /*'youku_loader': {
+                 'find': /^http:\/\/static\.youku\.com\/.*(loader|player_.*)(_taobao)?\.swf/,
+                 'replace': 'http://swf.adtchrome.com/loader.swf'
+                 },
+                 'youku_out': {
+                 'find': /^http:\/\/player\.youku\.com\/player\.php\/.*sid\/(.*)/,
+                 'replace': 'http://swf.adtchrome.com/loader.swf?VideoIDS=$1'
+                 },*/
+                'pps_pps': {
+                    'find': /^http:\/\/www\.iqiyi\.com\/player\/cupid\/common\/pps_flvplay_s\.swf/,
+                    'replace': 'http://swf.adtchrome.com/pps_20140420.swf'
+                },
+                /*'iqiyi_1': {
+                 'find': /^http:\/\/www\.iqiyi\.com\/player\/cupid\/common\/.+\.swf$/,
+                 'replace': 'http://swf.adtchrome.com/iqiyi_20140624.swf'
+                 },
+                 'iqiyi_2': {
+                 'find': /^http:\/\/www\.iqiyi\.com\/common\/flashplayer\/\d+\/.+\.swf$/,
+                 'replace': 'http://swf.adtchrome.com/iqiyi_20140624.swf'
+                 },*/
+                'ku6': {
+                    'find': /^http:\/\/player\.ku6cdn\.com\/default\/.*\/\d+\/(v|player|loader)\.swf/,
+                    'replace': 'http://swf.adtchrome.com/ku6_20140420.swf'
+                },
+                'ku6_topic': {
+                    'find': /^http:\/\/player\.ku6\.com\/inside\/(.*)\/v\.swf/,
+                    'replace': 'http://swf.adtchrome.com/ku6_20140420.swf?vid=$1'
+                },
+                'sohu': {
+                    'find': /^http:\/\/tv\.sohu\.com\/upload\/swf(\/p2p)?\/\d+\/Main\.swf/,
+                    'replace': 'http://www.adtchrome.com/sohu/sohu_20150104.swf'
+                },
+                'sohu2':{
+                    'find':/^http:\/\/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\/testplayer\/Main0?\.swf/,
+                    'replace':'http://www.adtchrome.com/sohu/sohu_20150104.swf'
+                },
+                'sohu_share': {
+                    'find': /^http:\/\/share\.vrs\.sohu\.com\/my\/v\.swf&/,
+                    'replace': 'http://www.adtchrome.com/sohu/sohu_20150104.swf?'
+                },
+                'sohu_sogou' : {
+                    'find': /^http:\/\/share\.vrs\.sohu\.com\/(\d+)\/v\.swf/,
+                    'replace': 'http://www.adtchrome.com/sohu/sohu_20150104.swf?vid=$1'
+                },
+                /*'letv': {
+                 'find': /^http:\/\/player\.letvcdn\.com\/.*p\/.*\/newplayer\/LetvPlayer\.swf/,
+                 'replace': 'http://swf.adtchrome.com/20150110_letv.swf'
+                 },
+                 'letv_topic': {
+                 'find': /^http:\/\/player\.hz\.letv\.com\/hzplayer\.swf\/v_list=zhuanti/,
+                 'replace': 'http://swf.adtchrome.com/20150110_letv.swf'
+                 },
+                 'letv_duowan': {
+                 'find': /^http:\/\/assets\.dwstatic\.com\/video\/vpp\.swf/,
+                 'replace': 'http://yuntv.letv.com/bcloud.swf'
+                 },*/
+                '17173_in':{
+                    'find':/http:\/\/f\.v\.17173cdn\.com\/(\d+\/)?flash\/PreloaderFile(Customer)?\.swf/,
+                    'replace':"http://swf.adtchrome.com/17173_in_20150522.swf"
+                },
+                '17173_out':{
+                    'find':/http:\/\/f\.v\.17173cdn\.com\/(\d+\/)?flash\/PreloaderFileFirstpage\.swf/,
+                    'replace':"http://swf.adtchrome.com/17173_out_20150522.swf"
+                },
+                '17173_live':{
+                    'find':/http:\/\/f\.v\.17173cdn\.com\/(\d+\/)?flash\/Player_stream(_firstpage)?\.swf/,
+                    'replace':"http://swf.adtchrome.com/17173_stream_20150522.swf"
+                },
+                '17173_live_out':{
+                    'find':/http:\/\/f\.v\.17173cdn\.com\/(\d+\/)?flash\/Player_stream_(custom)?Out\.swf/,
+                    'replace':"http://swf.adtchrome.com/17173.out.Live.swf"
+                }
+            },
+            _done: null,
+            get done() {
+                if(!this._done) {
+                    this._done = new Array();
+                }
+                return this._done;
+            },
+            addAnimations: function() {
+                var style = document.createElement('style');
+                style.type = 'text/css';
+                style.innerHTML = 'object,embed{\
+                -webkit-animation-duration:.001s;-webkit-animation-name:playerInserted;\
+                -ms-animation-duration:.001s;-ms-animation-name:playerInserted;\
+                -o-animation-duration:.001s;-o-animation-name:playerInserted;\
+                animation-duration:.001s;animation-name:playerInserted;}\
+                @-webkit-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}\
+                @-ms-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}\
+                @-o-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}\
+                @keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}';
+                document.getElementsByTagName('head')[0].appendChild(style);
+            },
+            animationsHandler: function(e) {
+                if(e.animationName === 'playerInserted') {
+                    this.replace(e.target);
+                }
+            },
+            replace: function(elem) {
+                if(this.done.indexOf(elem) != -1) return;
+                this.done.push(elem);
+                var player = elem.data || elem.src;
+                if(!player) return;
+                var i, find, replace = false;
+                for(i in this.rules) {
+                    find = this.rules[i]['find'];
+                    if(find.test(player)) {
+                        replace = this.rules[i]['replace'];
+                        if('function' === typeof this.rules[i]['preHandle']) {
+                            this.rules[i]['preHandle'].bind(this, elem, find, replace, player)();
+                        }else{
+                            this.reallyReplace.bind(this, elem, find, replace)();
+                        }
+                        break;
+                    }
+                }
+            },
+            reallyReplace: function(elem, find, replace) {
+                elem.data && (elem.data = elem.data.replace(find, replace)) || elem.src && ((elem.src = elem.src.replace(find, replace)) && (elem.style.display = 'block'));
+                var b = elem.querySelector("param[name='movie']");
+                this.reloadPlugin(elem);
+            },
+            reloadPlugin: function(elem) {
+                var nextSibling = elem.nextSibling;
+                var parentNode = elem.parentNode;
+                parentNode.removeChild(elem);
+                var newElem = elem.cloneNode(true);
+                this.done.push(newElem);
+                if(nextSibling) {
+                    parentNode.insertBefore(newElem, nextSibling);
+                } else {
+                    parentNode.appendChild(newElem);
+                }
+            },
+            init: function() {
+                var desc = navigator.mimeTypes['application/x-shockwave-flash'].description.toLowerCase();
+                /*if(desc.indexOf('adobe')>-1){
+                 delete this.rules["iqiyi_1"];
+                 delete this.rules["iqiyi_2"];
+                 }*/
+                if(document.URL.indexOf('tv.sohu.com')<=0){
+                    delete this.rules["sohu"];
+                }
+                var handler = this.animationsHandler.bind(this);
+                document.body.addEventListener('webkitAnimationStart', handler, false);
+                document.body.addEventListener('msAnimationStart', handler, false);
+                document.body.addEventListener('oAnimationStart', handler, false);
+                document.body.addEventListener('animationstart', handler, false);
+                this.addAnimations();
+            }
+        };
+        new A().init();
+    })();
+}
+// 20140730
+(function cnbeta() {
+    if (document.URL.indexOf('cnbeta.com') >= 0) {
+        var elms = document.body.querySelectorAll("p>embed");
+        Array.prototype.forEach.call(elms, function(elm) {
+            elm.style.marginLeft = "0px";
+        });
+    }
+})();
+//去百度推广广告
+if(document.URL.indexOf('www.baidu.com') >= 0){
+    if(document && document.getElementsByTagName && document.getElementById && document.body){
+        var a = function(){
+            Array.prototype.forEach.call(document.body.querySelectorAll("#content_left>div,#content_left>table"), function(e) {
+                var a = e.getAttribute("style");
+                if(a && /display:(table|block)\s!important/.test(a)){
+                    e.parentNode.removeChild(e)
+                }
+            });
+        };
+        a();
+        document.getElementById("su").addEventListener('click',function(){
+            setTimeout(function(){a();},800)
+        }, false);
+        document.getElementById("kw").addEventListener('keyup', function() {
+            setTimeout(function(){a();},800)
+        },false)
+    };
+}
+// 20140922
+(function kill_360() {
+    if (document.URL.indexOf('so.com') >= 0) {
+        document.getElementById("e_idea_pp").style.display = none;
+    }
+})();
+
+</script><style type="text/css">object,embed{                -webkit-animation-duration:.001s;-webkit-animation-name:playerInserted;                -ms-animation-duration:.001s;-ms-animation-name:playerInserted;                -o-animation-duration:.001s;-o-animation-name:playerInserted;                animation-duration:.001s;animation-name:playerInserted;}                @-webkit-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @-ms-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @-o-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}</style><script type="text/javascript" src="./Yacc 与 Lex 快速入门_files/atrk.js" id="dojoIoScript4" charset="utf-8"></script><script type="text/javascript" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/move.xd.js"></script><script type="text/javascript" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/TimedMoveable.xd.js"></script><script type="text/javascript" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/_CssStateMixin.xd.js"></script><script type="text/javascript" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/_FormMixin.xd.js"></script><script type="text/javascript" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/_DialogMixin.xd.js"></script><script type="text/javascript" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/DialogUnderlay.xd.js"></script><script type="text/javascript" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/ContentPane.xd.js"></script><script type="text/javascript" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/common.xd.js"></script><script type="text/javascript" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/TooltipDialog.xd.js"></script><script type="text/javascript" src="./Yacc 与 Lex 快速入门_files/blackwhite_lists.json" id="dojoIoScript5" charset="utf-8"></script><script type="text/javascript" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/Mover.xd.js"></script><script type="text/javascript" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/Moveable.xd.js"></script><script type="text/javascript" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/_ContentPaneResizeMixin.xd.js"></script><script type="text/javascript" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/html.xd.js"></script><script type="text/javascript" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/loading.xd.js"></script><script type="text/javascript" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/common.xd(1).js"></script><script type="text/javascript" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/autoscroll.xd.js"></script><script type="text/javascript" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/_LayoutWidget.xd.js"></script><script type="text/javascript" async="" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/utag.3108.js" id="utag_ibm.main_3108"></script><script type="text/javascript" async="" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/utag.1239.js" id="utag_ibm.main_1239"></script><script type="text/javascript" async="" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/utag.684.js" id="utag_ibm.main_684"></script><script type="text/javascript" async="" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/utag.694.js" id="utag_ibm.main_694"></script><script type="text/javascript" async="" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/utag.699.js" id="utag_ibm.main_699"></script><script type="text/javascript" async="" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/utag.752.js" id="utag_ibm.main_752"></script><script type="text/javascript" async="" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/utag.763.js" id="utag_ibm.main_763"></script><script type="text/javascript" async="" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/utag.1150.js" id="utag_ibm.main_1150"></script><script type="text/javascript" async="" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/utag.1172.js" id="utag_ibm.main_1172"></script><script type="text/javascript" async="" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/utag.1197.js" id="utag_ibm.main_1197"></script><script type="text/javascript" async="" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/utag.1260.js" id="utag_ibm.main_1260"></script><script type="text/javascript" async="" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/utag.1278.js" id="utag_ibm.main_1278"></script><script type="text/javascript" async="" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/utag.1175.js" id="utag_ibm.main_1175"></script><script type="text/javascript" async="" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/utag.1897.js" id="utag_ibm.main_1897"></script><script type="text/javascript" async="" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/utag.2041.js" id="utag_ibm.main_2041"></script><script type="text/javascript" async="" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/utag.2778.js" id="utag_ibm.main_2778"></script><script type="text/javascript" async="" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/utag.2903.js" id="utag_ibm.main_2903"></script><script type="text/javascript" async="" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/utag.2947.js" id="utag_ibm.main_2947"></script><script type="text/javascript" async="" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/utag.2956.js" id="utag_ibm.main_2956"></script><script type="text/javascript" async="" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/utag.3236.js" id="utag_ibm.main_3236"></script><script async="" src="./Yacc 与 Lex 快速入门_files/hotjar-42920.js"></script><script language="javascript" type="text/javascript" src="./Yacc 与 Lex 快速入门_files/50200000.js"></script><script language="javascript" type="text/javascript" src="./Yacc 与 Lex 快速入门_files/cookie-id.js"></script><script language="javascript" type="text/javascript" src="./Yacc 与 Lex 快速入门_files/rules_50200000.js"></script><script language="javascript" type="text/javascript" src="./Yacc 与 Lex 快速入门_files/dispatcher-v3.js"></script><script type="text/javascript" async="" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/utag.v.js" id="tiqapp"></script><script type="text/javascript" async="" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/i.js" id="tealium_setTTDid"></script><script src="./Yacc 与 Lex 快速入门_files/yahoo-min.js" type="text/javascript"></script><script src="./Yacc 与 Lex 快速入门_files/cp-v3.js" type="text/javascript"></script><script src="./Yacc 与 Lex 快速入门_files/json-min.js" type="text/javascript"></script><script type="text/javascript" async="" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/i.js" id="tealium_setTTDid"></script><script src="./Yacc 与 Lex 快速入门_files/modules-090e6cfe558eab0adbdfc3f235eca6fb.js"></script><script type="text/javascript" async="" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/i.js" id="tealium_setTTDid"></script><script type="text/javascript" async="" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/i.js" id="tealium_setTTDid"></script><script type="text/javascript" async="" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/01511d8cb6b4000c735f0fa8e8960a06d004006500bd0" id="tealium_visitor_service_1175main"></script><script type="text/javascript" async="" charset="utf-8" src="./Yacc 与 Lex 快速入门_files/01511d8cb6b4000c735f0fa8e8960a06d004006500bd0(1)" id="tealium_visitor_service_1175main"></script></head>
+<body id="ibm-com" class="v17" aria-busy="false">
+<div id="dw-regbar" class="dw-home-band" aria-labelledby="dw-regbar-vp" role="complementary" style="opacity: 1; top: 0px;">
+    <div class="ibm-columns">
+        <div class="ibm-col-6-6">
+            <span id="dw-regbar-bluemix">IBM <strong>Bluemix</strong></span>
+            <span id="dw-regbar-vp">点击按钮，开始云上的开发！</span>
+            <p class="ibm-button-link-alternate dw-button-green">
+                <a class="dw-button-large dw-regbar-btn" href="https://developer.ibm.com/sso/bmregistration?lang=zh_CN&amp;ca=dwchina-_-bluemix-_-lex-_-regbar-article" id="article-rbar-bmix-home-regbar">开始您的试用</a>
+            </p>
+        </div>
+    </div>
+    <span>
+        <a onclick="dwHideRegbar();" role="button">
+            <span id="dw-close-regbar" aria-label="Close the registration bar" title="Close the registration bar" role="button">
+        </span></a>
+    </span>
+</div>
+	<div id="ibm-top" class="ibm-landing-page ibm-no-scroll" style="margin-top: 42px;"><img src="./Yacc 与 Lex 快速入门_files/ibm_logo_print.png" width="43" height="15" id="ibm-print-masthead" alt="IBM Print">
+
+<!-- MASTHEAD_BEGIN -->		
+<div id="ibm-masthead" role="banner">
+
+    <!-- TOP ROW -->    
+	<div id="dw-masthead-top-row">
+		<ul id="ibm-mast-options-dw" role="toolbar" aria-label="Masthead navigation">
+			<li id="dw-mast-top-4" role="presentation">
+				<a href="http://www.ibm.com/developerworks/cn/" tabindex="0"><img src="./Yacc 与 Lex 快速入门_files/dwn-dw-badge.png" width="43" height="22" alt="dW" aria-label="dW"></a>
+			</li>
+			<li id="dw-mast-top-0" role="presentation">
+				<div id="dw-mast-signin">
+					<a id="dw-mf-signin-link" class="" href="https://www.ibm.com/developerworks/dwwi/jsp/ssologin.jsp?d=https%3A%2F%2Fwww.ibm.com%2Fdeveloperworks%2Fcn%2Flinux%2Fsdk%2Flex%2F&amp;lang=zh_CN&amp;a=dwmav" title="" tabindex="2">登录</a>
+					<span class="dw-mf-signin-spacer">|</span>
+					<a id="dw-mf-reg-link" class="" href="https://www.ibm.com/developerworks/dwwi/jsp/ssoregister.jsp?d=https%3A%2F%2Fwww.ibm.com%2Fdeveloperworks%2Fcn%2Flinux%2Fsdk%2Flex%2F&amp;lang=zh_CN&amp;a=dwmav" title="" tabindex="3">注册</a>
+				</div>
+				<div id="dw-mast-auth-link" class="dw-mf-hide">
+					<a class="authenticated ibm-active" href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#" role="button" tabindex="2"></a>
+					<ul id="dw-mast-auth-menu" class="dw-mf-hide">
+						<li class="dw-mast-auth-menu-title" aria-hidden="true">developerWorks 社区</li>
+						<li>
+							<span class="dw-mast-auth-menu-arrow" aria-hidden="true">›</span><a href="https://www.ibm.com/developerworks/community/profiles/html/myProfileView.do?lang=zh" tabindex="3">我的概要信息</a>
+						</li>
+						<li>
+							<span class="dw-mast-auth-menu-arrow" aria-hidden="true">›</span><a href="https://www.ibm.com/developerworks/community/groups/service/html/mycommunities?lang=zh" tabindex="4">我的社区</a>
+						</li>
+						<li>
+							<span class="dw-mast-auth-menu-arrow" aria-hidden="true">›</span><a href="https://www.ibm.com/developerworks/community/news/?lang=zh" tabindex="5">设置</a>
+						</li>
+						<li class="dw-mast-auth-menu-divider"><hr></li>
+						<li>
+							<span class="dw-mast-auth-menu-arrow" aria-hidden="true">›</span><a id="dw-mast-signout-link" href="https://www.ibm.com/developerworks/dwwi/jsp/ssologout.jsp?d=http%3A%2F%2Fwww.ibm.com%2Fdeveloperworks%2Fcn%2F&amp;a=dwmav" tabindex="6">退出</a>
+						</li>
+					</ul>				
+				</div>
+			</li>
+			<li id="dw-mast-top-1">
+				<div></div>
+			</li>
+			<li id="dw-mast-top-3" role="presentation">
+				<a href="http://www.ibm.com/cn/zh/" tabindex="1">IBM</a>
+			</li>
+		</ul>
+	</div>
+
+    <!-- BOTTOM ROW -->
+	<div id="ibm-universal-nav-dw" aria-label="Site map">
+		<ul id="ibm-unav-links-dw">
+			<li id="ibm-unav-home-dwlogo">
+				<a href="http://www.ibm.com/developerworks/cn/"><img src="./Yacc 与 Lex 快速入门_files/dwn-dw-wordmark.png" width="225" height="28" alt="developerWorks®"></a>
+			</li>
+		</ul>
+		<ul id="ibm-menu-links-dw" class="ibm-menu-links-dw-cn" role="toolbar" aria-label="Site map">
+			<li id="dw-mast-nav-0" role="presentation"><a href="http://www.ibm.com/developerworks/cn/topics/" tabindex="0">技术主题</a></li>
+			<li id="dw-mast-nav-1" role="presentation"><a href="http://www.ibm.com/developerworks/cn/downloads/" tabindex="0">软件下载</a></li>
+			<li id="dw-mast-nav-2" role="presentation"><a href="http://www.ibm.com/developerworks/community/?lang=zh" tabindex="0">社区</a></li>
+			<li id="dw-mast-nav-3" role="presentation"><a href="https://www.ibm.com/developerworks/community/groups/service/html/communityview?communityUuid=6d7f9e5d-5f89-4767-a006-a81b8d186370&amp;lang=zh" tabindex="0">技术讲座</a></li>
+		</ul>
+		<form id="ibm-search-form" action="https://www.ibm.com/search/csass/search/" method="get" name="form1" aria-label="搜索 developerWorks" role="search">
+			<p>
+				<label for="q"><span class="ibm-access">搜索 developerWorks</span></label>
+				<input id="q" type="text" name="q" value="搜索 developerWorks" maxlength="100">
+				<input type="hidden" name="sn" value="dw">
+				<input type="hidden" name="lang" value="zh">
+				<input type="hidden" name="cc" value="CN">
+				<input type="hidden" name="en" value="utf">
+				<input type="hidden" name="hpp" value="20">
+				<input type="hidden" name="dws" value="cndw">
+				<input type="hidden" name="lo" value="zh">
+				<input id="ibm-search" class="ibm-btn-search" type="submit" value="提交">
+			</p>
+		</form>
+	</div>    
+	
+<div id="ibm-social-tools" role="navigation" aria-label="社交工具" style="display: block;"><ul role="toolbar" aria-label="Social tool list"><li><a class="ibm-share-print" title="打印本页面" href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#" rel="print" dojoattrid="1" role="button" tabindex="0">打印本页面</a></li><li><a class="ibm-share-email" title="用电子邮件发送本页面" href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#" rel="email" dojoattrid="2" role="button" tabindex="-1">用电子邮件发送本页面</a></li><li></li><li></li><li><a class="ibm-share-weibo" tabindex="-1" role="button" dojoattrid="2" rel="新浪微博" title="新浪微博" href="http://service.weibo.com/share/share.php?title=Yacc%20%E4%B8%8E%20Lex%20%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8&amp;url=https%3A%2F%2Fwww.ibm.com%2Fdeveloperworks%2Fcn%2Flinux%2Fsdk%2Flex%2F&amp;language=zh_cn" onclick="ibmweb.sbs.clickHandler(event,{url:&#39;http://service.weibo.com/share/share.php?title=%{TITLE}&amp;url=%{URL}&amp;language=zh_cn&#39;});">新浪微博</a></li><li><a class="ibm-share-renren" tabindex="-1" role="button" dojoattrid="3" rel="人人网" title="人人网" href="http://share.renren.com/share/buttonshare?title=Yacc%20%E4%B8%8E%20Lex%20%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8&amp;link=https%3A%2F%2Fwww.ibm.com%2Fdeveloperworks%2Fcn%2Flinux%2Fsdk%2Flex%2F" onclick="ibmweb.sbs.clickHandler(event,{url:&#39;http://share.renren.com/share/buttonshare?title=%{TITLE}&amp;link=%{URL}&#39;});">人人网</a></li><li><a class="dwcn-tencent-link" tabindex="-1" role="button" dojoattrid="4" rel="腾讯微博" title="腾讯微博" href="http://v.t.qq.com/share/share.php?title=Yacc%20%E4%B8%8E%20Lex%20%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8&amp;url=https%3A%2F%2Fwww.ibm.com%2Fdeveloperworks%2Fcn%2Flinux%2Fsdk%2Flex%2F" onclick="ibmweb.sbs.clickHandler(event,{url:&#39;http://v.t.qq.com/share/share.php?title=%{TITLE}&amp;url=%{URL}&#39;});">腾讯微博</a></li><li><a class="dwcn-sohu-link" tabindex="-1" role="button" dojoattrid="5" rel="搜狐微博" title="搜狐微博" href="http://t.sohu.com/third/post.jsp?title=Yacc%20%E4%B8%8E%20Lex%20%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%20&amp;link=https%3A%2F%2Fwww.ibm.com%2Fdeveloperworks%2Fcn%2Flinux%2Fsdk%2Flex%2F" onclick="ibmweb.sbs.clickHandler(event,{url:&#39;http://t.sohu.com/third/post.jsp?title=%{TITLE}%20&amp;link=%{URL}&#39;});">搜狐微博</a></li><li><a class="dwcn-netease-link" tabindex="-1" role="button" dojoattrid="6" rel="网易微博" title="网易微博" href="http://t.163.com/article/user/checkLogin.do?info=Yacc%20%E4%B8%8E%20Lex%20%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%20https%3A%2F%2Fwww.ibm.com%2Fdeveloperworks%2Fcn%2Flinux%2Fsdk%2Flex%2F" onclick="ibmweb.sbs.clickHandler(event,{url:&#39;http://t.163.com/article/user/checkLogin.do?info=%{TITLE}%20%{URL}&#39;});">网易微博</a></li><li><a class="ibm-share-digg" title="Digg" href="http://digg.com/submit?phase=2&amp;url=https%3A%2F%2Fwww.ibm.com%2Fdeveloperworks%2Fcn%2Flinux%2Fsdk%2Flex%2F&amp;title=Yacc%20%E4%B8%8E%20Lex%20%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8" rel="digg" dojoattrid="7" role="button" tabindex="-1" onclick="ibmweb.sbs.clickHandler(event,{url:&#39;http://digg.com/submit?phase=2&amp;url=%{URL}&amp;title=%{TITLE}&#39;});">Digg</a></li><li><a class="ibm-share-facebook" title="Facebook" href="http://www.facebook.com/sharer.php?u=https%3A%2F%2Fwww.ibm.com%2Fdeveloperworks%2Fcn%2Flinux%2Fsdk%2Flex%2F&amp;t=Yacc%20%E4%B8%8E%20Lex%20%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8" rel="facebook" dojoattrid="8" role="button" tabindex="-1" onclick="ibmweb.sbs.clickHandler(event,{url:&#39;http://www.facebook.com/sharer.php?u=%{URL}&amp;t=%{TITLE}&#39;});">Facebook</a></li><li><a class="ibm-share-twitter" title="Twitter" href="http://twitter.com/?status=https%3A%2F%2Fwww.ibm.com%2Fdeveloperworks%2Fcn%2Flinux%2Fsdk%2Flex%2F%20-%20Yacc%20%E4%B8%8E%20Lex%20%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8" rel="twitter" dojoattrid="9" role="button" tabindex="-1" onclick="ibmweb.sbs.clickHandler(event,{url:&#39;http://twitter.com/?status=%{URL}%20-%20%{TITLE}&#39;});">Twitter</a></li><li><a class="ibm-share-delicious" title="Delicious" href="http://delicious.com/post?url=https%3A%2F%2Fwww.ibm.com%2Fdeveloperworks%2Fcn%2Flinux%2Fsdk%2Flex%2F&amp;title=Yacc%20%E4%B8%8E%20Lex%20%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8" rel="delicious" dojoattrid="10" role="button" tabindex="-1" onclick="ibmweb.sbs.clickHandler(event,{url:&#39;http://delicious.com/post?url=%{URL}&amp;title=%{TITLE}&#39;});">Delicious</a></li><li><a class="ibm-share-linkedin" title="Linked In" href="http://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Fwww.ibm.com%2Fdeveloperworks%2Fcn%2Flinux%2Fsdk%2Flex%2F&amp;title=Yacc%20%E4%B8%8E%20Lex%20%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8" rel="linkedin" dojoattrid="11" role="button" tabindex="-1" onclick="ibmweb.sbs.clickHandler(event,{url:&#39;http://www.linkedin.com/shareArticle?mini=true&amp;url=%{URL}&amp;title=%{TITLE}&#39;});">Linked In</a></li></ul></div></div>
+<div id="fdiv" class="ibm-access"></div><!-- MASTHEAD_END -->
+	    
+<!-- LAYOUT -->
+<!-- LEADSPACE_BEGIN --> 
+<div id="ibm-access-cntr" role="main"><div id="ibm-leadspace-head">
+	<!-- LEADSPACE_BODY_BEGIN --> 
+	<div id="ibm-leadspace-body">
+		<!-- Navigation_Trail_BEGIN -->
+      <ul id="ibm-navigation-trail" role="directory" aria-label="Bread Crumbs"><li><a href="http://www.ibm.com/developerworks/cn/">developerWorks 中国</a></li><li><a href="http://www.ibm.com/developerworks/cn/topics/">技术主题</a></li><li><a href="http://www.ibm.com/developerworks/cn/linux/">Linux</a></li><li><a href="http://www.ibm.com/developerworks/cn/views/linux/libraryview.jsp">文档库</a></li></ul>
+		<!-- END_Navigation_Trail -->
+			<!-- Title_Subtitle -->
+			<h1>Yacc 与 Lex 快速入门</h1><p><em><span>Lex 与 Yacc 介绍</span></em></p>
+	</div>
+	<!-- LEADSPACE_BODY_END --> 
+	<!-- SUMMARY_BEGIN -->
+	<div id="dw-summary-area" class="dw-summary-columns">
+		<div class="ibm-col-6-4">
+		<p>Lex 和 Yacc 是 UNIX 两个非常重要的、功能强大的工具。事实上，如果你熟练掌握 Lex 和 Yacc 的话，它们的强大功能使创建 FORTRAN 和 C 的编译器如同儿戏。Ashish Bansal 为您详细的讨论了编写自己的语言和编译器所用到的这两种工具，包括常规表达式、声明、匹配模式、变量、Yacc 语法和解析器代码。最后，他解释了怎样把 Lex 和 Yacc 结合起来。</p>
+		<p class="ibm-no-print ibm-ind-link">
+
+			
+			<span id="nCmts"><span>5</span><img class="dw-cmts-arrow" alt="" src="./Yacc 与 Lex 快速入门_files/dw-cmts-arrow.png" height="7" width="7"> <a href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#icomments" class="dw-cmt-link">评论</a></span>
+		</p>
+		</div>
+		<div class="ibm-col-6-2 dw-toc-margin">
+			<p class="dw-summary-author"><a href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#authorN10019" class="ibm-popup-link" onclick="ibmweb.overlay.show(&#39;authorN10019&#39;,this);return false;" role="button">Ashish Bansal</a> (<a href="mailto:abansal@ieee.org?subject=Yacc%20%E4%B8%8E%20Lex%20%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8&amp;cc=abansal@ieee.org">abansal@ieee.org</a>), 软件工程师, Sapient 公司</p>
+<div id="authorN10019" class="ibm-common-overlay"><div class="ibm-head"><p><a href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#close" class="ibm-common-overlay-close">关闭 [x]</a></p></div><div class="ibm-body"><div class="ibm-main"><div class="ibm-title"><!--this is where the h2 usually goes--></div><div class="ibm-container ibm-alternate"><div class="ibm-container-body">
+<p><!--.-->
+
+Ashish Bansal 具有印度瓦腊纳西 Banaras Hindu
+大学技术学院的电子与通信工程学士学位。 他目前是 Sapient
+公司的软件工程师。他的Email是 
+        <a href="mailto:abansal@ieee.org?cc=abansal@ieee.org">abansal@sapient.com</a>。
+      </p><br><br></div></div></div></div><div class="ibm-footer"><!----></div></div>
+			<p class="dw-summary-date">2000 年 11 月 01 日</p>
+			
+
+
+			<div aria-hidden="true" class="ibm-container" id="dw-toc"><div class="ibm-container-body"><ul class="ibm-twisty"><li><a href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#toggle" class="ibm-twisty-trigger ibm-twisty-trigger-closed"><img src="./Yacc 与 Lex 快速入门_files/c.gif" alt="expand"></a><span class="ibm-twisty-head">内容</span><div class="ibm-twisty-body" style="display: none;"><ul style="font-size:0.8em" class="ibm-link-list">
+<li><a class="ibm-anchor-down-em-link" href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#1">Lex</a></li>
+<li><a class="ibm-anchor-down-em-link" href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#2">Lex 的常规表达式</a></li>
+<li><a class="ibm-anchor-down-em-link" href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#3">Lex 编程</a></li>
+<li><a class="ibm-anchor-down-em-link" href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#4">C 和 Lex 的全局声明</a></li>
+<li><a class="ibm-anchor-down-em-link" href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#5">Lex 的模式匹配规则</a></li>
+<li><a class="ibm-anchor-down-em-link" href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#6">C 代码</a></li>
+<li><a class="ibm-anchor-down-em-link" href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#7">将它们全部结合起来</a></li>
+<li><a class="ibm-anchor-down-em-link" href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#8">高级 Lex</a></li>
+<li><a class="ibm-anchor-down-em-link" href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#9">Yacc</a></li>
+<li><a class="ibm-anchor-down-em-link" href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#10">用 Yacc 编写语法</a></li>
+<li><a class="ibm-anchor-down-em-link" href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#11">C 与 Yacc 的声明</a></li>
+<li><a class="ibm-anchor-down-em-link" href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#12">Yacc 语法规则</a></li>
+<li><a class="ibm-anchor-down-em-link" href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#13">附加 C 代码</a></li>
+<li><a class="ibm-anchor-down-em-link" href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#14">命令行的其他常用选项</a></li>
+<li><a class="ibm-anchor-down-em-link" href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#15">将 Lex 与 Yacc 结合起来</a></li>
+<li><a class="ibm-anchor-down-em-link" href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#resources">参考资料 </a></li>
+<li><a class="ibm-anchor-down-em-link" href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#icomments">评论</a></li></ul></div></li></ul></div></div>
+		</div>
+	</div>
+	<!-- SUMMARY_END -->
+</div><div id="ibm-pcon">
+
+<!-- BEGIN_IBM-CONTENT -->
+<div id="ibm-content">
+
+<!-- BEGIN_IBM-CONTENT-BODY -->
+<div id="ibm-content-body">
+
+<!-- BEGIN_IBM-CONTENT-MAIN -->
+<div id="ibm-content-main">
+
+<!-- 1_1_COLUMN_BEGIN -->
+<div class="ibm-columns">
+<div class="ibm-col-1-1"><div class="dw-article-sidebar dw-bluemix" id="dwc-exp-a"><img src="./Yacc 与 Lex 快速入门_files/bluemix-graphic.png" height="64" width="64" alt=""><p>在 IBM Bluemix 云平台上开发并部署您的下一个应用。</p><p class="ibm-button-link-alternate dw-button-green"><a id="tutc-sbar-bmix-home-btn-ABa" href="https://developer.ibm.com/sso/bmregistration?lang=zh_CN&amp;ca=dwchina-_-bluemix-_-lex-_-sidebar" class="dw-button-large">开始您的试用</a></p></div>
+
+<p>Lex 代表 Lexical Analyzar。Yacc 代表 Yet Another Compiler
+Compiler。 让我们从 Lex 开始吧。</p><h2 id="1">Lex</h2><p>
+Lex
+是一种生成扫描器的工具。扫描器是一种识别文本中的词汇模式的程序。
+这些词汇模式（或者常规表达式）在一种特殊的句子结构中定义，这个我们一会儿就要讨论。</p><p>
+一种匹配的常规表达式可能会包含相关的动作。这一动作可能还包括返回一个标记。
+当 Lex
+接收到文件或文本形式的输入时，它试图将文本与常规表达式进行匹配。
+它一次读入一个输入字符，直到找到一个匹配的模式。
+如果能够找到一个匹配的模式，Lex
+就执行相关的动作（可能包括返回一个标记）。
+另一方面，如果没有可以匹配的常规表达式，将会停止进一步的处理，Lex
+将显示一个错误消息。</p><p>Lex 和 C 是强耦合的。一个
+        <em>.lex</em> 文件（Lex 文件具有
+        <em>.lex</em> 的扩展名）通过 lex 公用程序来传递，并生成 C
+的输出文件。这些文件被编译为词法分析器的可执行版本。
+      </p><div class="ibm-alternate-rule"><hr></div><p class="ibm-ind-link ibm-back-to-top"><a href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#ibm-pcon" class="ibm-anchor-up-link">回页首</a></p><h2 id="2">Lex 的常规表达式</h2><p>
+常规表达式是一种使用元语言的模式描述。表达式由符号组成。符号一般是字符和数字，但是
+Lex 中还有一些具有特殊含义的其他标记。 下面两个表格定义了 Lex
+中使用的一些标记并给出了几个典型的例子。</p><h5 id="N10052">用 Lex 定义常规表达式</h5><table border="1" cellpadding="3" cellspacing="0" class="ibm-data-table" width="590"><thead xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><tr><th valign="top" width="25%">字符</th><th valign="top" width="75%">含义</th></tr></thead><tbody xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><tr><td valign="top" width="25%"><strong>A-Z, 0-9, a-z</strong></td><td valign="top" width="75%">构成了部分模式的字符和数字。</td></tr><tr><td valign="top" width="25%"><strong>.</strong></td><td valign="top" width="75%">匹配任意字符，除了 \n。</td></tr><tr><td valign="top" width="25%"><strong>-</strong></td><td valign="top" width="75%">用来指定范围。例如：A-Z 指从 A 到 Z
+之间的所有字符。</td></tr><tr><td valign="top" width="25%"><strong>[ ]</strong></td><td valign="top" width="75%">一个字符集合。匹配括号内的
+              <em>任意</em>
+字符。如果第一个字符是 
+              <strong>^</strong> 那么它表示否定模式。例如: [abC]
+匹配 a, b, 和 C中的任何一个。
+            </td></tr><tr><td valign="top" width="25%"><strong>*</strong></td><td valign="top" width="75%">
+匹配 
+              <em>0个</em>或者多个上述的模式。
+            </td></tr><tr><td valign="top" width="25%"><strong>+</strong></td><td valign="top" width="75%">匹配
+              <em>1个</em>或者多个上述模式。
+            </td></tr><tr><td valign="top" width="25%"><strong>?</strong></td><td valign="top" width="75%">匹配
+              <em>0个或1个</em>上述模式。
+            </td></tr><tr><td valign="top" width="25%"><strong>$</strong></td><td valign="top" width="75%">
+作为模式的最后一个字符匹配一行的结尾。</td></tr><tr><td valign="top" width="25%"><strong>{ }</strong></td><td valign="top" width="75%">指出一个模式可能出现的次数。 例如:
+A{1,3} 表示 A 可能出现1次或3次。</td></tr><tr><td valign="top" width="25%"><strong>\</strong></td><td valign="top" width="75%">
+用来转义元字符。同样用来覆盖字符在此表中定义的特殊意义，只取字符的本意。</td></tr><tr><td valign="top" width="25%"><strong>^</strong></td><td valign="top" width="75%">否定。</td></tr><tr><td valign="top" width="25%"><strong>|</strong></td><td valign="top" width="75%">表达式间的逻辑或。</td></tr><tr><td valign="top" width="25%"><strong>"&lt;一些符号&gt;"</strong></td><td valign="top" width="75%">字符的字面含义。元字符具有。</td></tr><tr><td valign="top" width="25%"><strong>/</strong></td><td valign="top" width="75%">
+向前匹配。如果在匹配的模版中的“/”后跟有后续表达式，只匹配模版中“/”前
+面的部分。如：如果输入 A01，那么在模版 A0/1 中的 A0 是匹配的。</td></tr><tr><td valign="top" width="25%"><strong>( )</strong></td><td valign="top" width="75%">将一系列常规表达式分组。</td></tr></tbody></table><h5 id="N1010F">常规表达式举例</h5><table border="1" cellpadding="3" cellspacing="0" class="ibm-data-table" width="590"><thead xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><tr><th valign="top" width="28%">常规表达式</th><th valign="top" width="72%">含义</th></tr></thead><tbody xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><tr><td valign="top" width="28%">
+joke[rs]
+</td><td valign="top" width="72%">匹配 jokes 或 joker。</td></tr><tr><td valign="top" width="28%">
+A{1,2}shis+
+</td><td valign="top" width="72%">匹配 AAshis, Ashis, AAshi, Ashi。</td></tr><tr><td valign="top" width="28%">
+(A[b-e])+
+</td><td valign="top" width="72%">匹配在 A 出现位置后跟随的从 b 到 e
+的所有字符中的 0 个或 1个。</td></tr></tbody></table><p>Lex 中的标记声明类似 C
+中的变量名。每个标记都有一个相关的表达式。
+（下表中给出了标记和表达式的例子。）
+使用这个表中的例子，我们就可以编一个字数统计的程序了。
+我们的第一个任务就是说明如何声明标记。</p><h5 id="N10144">标记声明举例</h5><table border="1" cellpadding="3" cellspacing="0" class="ibm-data-table" width="590"><thead xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><tr><th valign="top" width="13%">标记</th><th valign="top" width="51%">相关表达式</th><th valign="top" width="36%">含义</th></tr></thead><tbody xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><tr><td valign="top" width="13%">数字(number)</td><td valign="top" width="51%">([0-9])+</td><td valign="top" width="36%">1个或多个数字</td></tr><tr><td valign="top" width="13%">字符(chars)</td><td valign="top" width="51%">[A-Za-z]</td><td valign="top" width="36%">任意字符</td></tr><tr><td valign="top" width="13%">空格(blank)</td><td valign="top" width="51%">" "</td><td valign="top" width="36%">一个空格</td></tr><tr><td valign="top" width="13%">字(word)</td><td valign="top" width="51%">(chars)+</td><td valign="top" width="36%">1个或多个
+              <em>chars</em></td></tr><tr><td valign="top" width="13%">变量(variable)</td><td valign="top" width="51%">(字符)+(数字)*(字符)*(数字)*</td><td valign="top" width="36%"></td></tr></tbody></table><div class="ibm-alternate-rule"><hr></div><p class="ibm-ind-link ibm-back-to-top"><a href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#ibm-pcon" class="ibm-anchor-up-link">回页首</a></p><h2 id="3">Lex 编程</h2><p>
+Lex 编程可以分为三步：</p><ol><li>以 Lex 可以理解的格式指定模式相关的动作。</li><li>在这一文件上运行 Lex，生成扫描器的 C 代码。</li><li>编译和链接 C 代码，生成可执行的扫描器。</li></ol><p>注意: 如果扫描器是用 Yacc
+开发的解析器的一部分，只需要进行第一步和第二步。
+关于这一特殊问题的帮助请阅读 
+        <a href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#9">Yacc</a>和
+        <a href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#15">将 Lex 和 Yacc 结合起来</a>部分。
+      </p><p>现在让我们来看一看 Lex 可以理解的程序格式。一个 Lex
+程序分为三个段：第一段是 C 和 Lex 的全局声明，第二段包括模式（C
+代码），第三段是补充的 C 函数。 例如, 第三段中一般都有 main()
+函数。这些段以%%来分界。 那么，回到字数统计的 Lex
+程序，让我们看一下程序不同段的构成。</p><div class="ibm-alternate-rule"><hr></div><p class="ibm-ind-link ibm-back-to-top"><a href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#ibm-pcon" class="ibm-anchor-up-link">回页首</a></p><h2 id="4">C 和 Lex 的全局声明</h2><p>
+这一段中我们可以增加 C
+变量声明。这里我们将为字数统计程序声明一个整型变量，来保存程序统计出来的字数。
+我们还将进行 Lex 的标记声明。</p><h5 id="N101BC">字数统计程序的声明</h5><div class="codesection"><pre class="displaycode">       %{
+        int wordCount = 0;
+        %}
+        chars [A-za-z\_\'\.\"]
+        numbers ([0-9])+
+        delim [" "\n\t]
+        whitespace {delim}+
+        words {chars}+
+        %%</pre></div><p>两个百分号标记指出了 Lex
+程序中这一段的结束和三段中第二段的开始。</p><div class="ibm-alternate-rule"><hr></div><p class="ibm-ind-link ibm-back-to-top"><a href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#ibm-pcon" class="ibm-anchor-up-link">回页首</a></p><h2 id="5">Lex 的模式匹配规则</h2><p>
+让我们看一下 Lex 描述我们所要匹配的标记的规则。（我们将使用 C
+来定义标记匹配后的动作。）
+继续看我们的字数统计程序，下面是标记匹配的规则。</p><h5 id="N101CD">字数统计程序中的 Lex 规则</h5><div class="codesection"><pre class="displaycode">       {words} { wordCount++; /*
+        increase the word count by one*/ }
+        {whitespace} { /* do
+        nothing*/ }
+        {numbers} { /* one may
+        want to add some processing here*/ }
+        %%</pre></div><div class="ibm-alternate-rule"><hr></div><p class="ibm-ind-link ibm-back-to-top"><a href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#ibm-pcon" class="ibm-anchor-up-link">回页首</a></p><h2 id="6">C 代码</h2><p>
+Lex 编程的第三段，也就是最后一段覆盖了 C
+的函数声明（有时是主函数）。注意这一段必须包括 yywrap() 函数。 Lex
+有一套可供使用的函数和变量。 其中之一就是 yywrap。
+一般来说，yywrap() 的定义如下例。我们将在 
+        <a href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#8">高级 Lex</a>
+中探讨这一问题。
+      </p><h5 id="N101E0">字数统计程序的 C 代码段</h5><div class="codesection"><pre class="displaycode">       void main()
+        {
+        yylex(); /* start the
+        analysis*/
+        printf(" No of words:
+        %d\n", wordCount);
+        }
+        int yywrap()
+        {
+        return 1;
+        }</pre></div><p>上一节我们讨论了 Lex
+编程的基本元素，它将帮助你编写简单的词法分析程序。 在 
+        <a href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#8">高级 Lex</a> 这一节中我们将讨论 Lex
+提供的函数，这样你就能编写更加复杂的程序了。
+      </p><div class="ibm-alternate-rule"><hr></div><p class="ibm-ind-link ibm-back-to-top"><a href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#ibm-pcon" class="ibm-anchor-up-link">回页首</a></p><h2 id="7">将它们全部结合起来</h2><p><em>.lex</em>文件是 Lex 的扫描器。它在 Lex 程序中如下表示：
+      </p><div class="codesection"><pre class="displaycode">   $ lex &lt;file name.lex&gt;</pre></div><p>这生成了 lex.yy.c 文件，它可以用 C
+编译器来进行编译。它还可以用解析器来生成可执行程序，或者在链接步骤中通过选项
+�ll 包含 Lex 库。</p><p>这里是一些 Lex 的标志：
+</p><ul class="ibm-bullet-list"><li><em>-c</em>表示 C 动作，它是缺省的。
+        </li><li><em>-t</em>写入 lex.yy.c 程序来代替标准输出。
+        </li><li><em>-v</em>提供一个两行的统计汇总。
+        </li><li><em>-n</em>不打印 -v 的汇总。
+        </li></ul><div class="ibm-alternate-rule"><hr></div><p class="ibm-ind-link ibm-back-to-top"><a href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#ibm-pcon" class="ibm-anchor-up-link">回页首</a></p><h2 id="8">高级 Lex</h2><p>
+Lex
+有几个函数和变量提供了不同的信息，可以用来编译实现复杂函数的程序。
+下表中列出了一些变量和函数，以及它们的使用。 详尽的列表请参考 Lex
+或 Flex 手册（见后文的 
+        <a href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#resources">资源</a>）。
+      </p><h5 id="N10222">Lex 变量</h5><table border="1" cellpadding="3" cellspacing="0" class="ibm-data-table" width="590"><thead xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><tr><th valign="top" width="25%">yyin</th><th valign="top" width="75%">FILE* 类型。 它指向 lexer
+正在解析的当前文件。</th></tr></thead><tbody xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><tr><td valign="top" width="25%">yyout</td><td valign="top" width="75%">FILE* 类型。 它指向记录 lexer
+输出的位置。 缺省情况下，yyin 和 yyout 都指向标准输入和输出。</td></tr><tr><td valign="top" width="25%">yytext</td><td valign="top" width="75%">
+匹配模式的文本存储在这一变量中（char*）。</td></tr><tr><td valign="top" width="25%">yyleng</td><td valign="top" width="75%">给出匹配模式的长度。</td></tr><tr><td valign="top" width="25%">yylineno</td><td valign="top" width="75%">提供当前的行数信息。
+（lexer不一定支持。）</td></tr></tbody></table><h5 id="N1025E">Lex 函数</h5><table border="1" cellpadding="3" cellspacing="0" class="ibm-data-table" width="590"><thead xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><tr><th valign="top" width="25%">yylex()</th><th valign="top" width="75%">这一函数开始分析。 它由 Lex
+自动生成。</th></tr></thead><tbody xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><tr><td valign="top" width="25%">yywrap()</td><td valign="top" width="75%">这一函数在文件（或输入）的末尾调用。
+如果函数的返回值是1，就停止解析。 因此它可以用来解析多个文件。
+代码可以写在第三段，这就能够解析多个文件。 方法是使用 yyin
+文件指针（见上表）指向不同的文件，直到所有的文件都被解析。
+最后，yywrap() 可以返回 1 来表示解析的结束。</td></tr><tr><td valign="top" width="25%">yyless(int n)</td><td valign="top" width="75%">这一函数可以用来送回除了前�n?
+个字符外的所有读出标记。</td></tr><tr><td valign="top" width="25%">yymore()</td><td valign="top" width="75%">这一函数告诉 Lexer
+将下一个标记附加到当前标记后。</td></tr></tbody></table><p>对 Lex 的讨论就到这里。下面我们来讨论 Yacc...</p><div class="ibm-alternate-rule"><hr></div><p class="ibm-ind-link ibm-back-to-top"><a href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#ibm-pcon" class="ibm-anchor-up-link">回页首</a></p><h2 id="9">Yacc</h2><p>
+Yacc 代表 Yet Another Compiler Compiler。 Yacc 的 GNU 版叫做
+Bison。它是一种工具，将任何一种编程语言的所有语法翻译成针对此种语言的
+Yacc 语 法解析器。它用巴科斯范式(BNF, Backus Naur
+Form)来书写。按照惯例，Yacc 文件有 .y 后缀。编译行如下调用 Yacc
+编译器：</p><div class="codesection"><pre class="displaycode">       $ yacc &lt;options&gt;
+        &lt;filename ending with .y&gt;</pre></div><p>在进一步阐述以前，让我们复习一下什么是语法。在上一节中，我们看到
+Lex 从输入序列中识别标记。
+如果你在查看标记序列，你可能想在这一序列出现时执行某一动作。
+这种情况下有效序列的规范称为语法。Yacc 语法文件包括这一语法规范。
+它还包含了序列匹配时你想要做的事。</p><p>为了更加说清这一概念，让我们以英语为例。 这一套标记可能是：名词,
+动词,
+形容词等等。为了使用这些标记造一个语法正确的句子，你的结构必须符合一定的规则。
+一个简单的句子可能是名词+动词或者名词+动词+名词。(如 I care. See
+spot run.)</p><p>所以在我们这里，标记本身来自语言（Lex），并且标记序列允许用 Yacc
+来指定这些标记(标记序列也叫语法)。</p><div class="dw-sidebar ibm-inset"><h2 id="N1029C">终端和非终端符号</h2><p><strong>终端符号</strong> : 代表一类在语法结构上等效的标记。
+终端符号有三种类型：
+        </p><p><em>命名标记</em>: 这些由
+          <em>%token</em> 标识符来定义。
+按照惯例，它们都是大写。
+        </p><p><em>字符标记</em> : 字符常量的写法与 C 相同。例如, --
+就是一个字符标记。
+        </p><p><em>字符串标记</em> : 写法与 C 的字符串常量相同。例如，"&lt;&lt;"
+就是一个字符串标记。
+        </p><p>lexer 返回命名标记。</p><p><strong>非终端符号</strong> : 是一组非终端符号和终端符号组成的符号。
+按照惯例，它们都是小写。 在例子中，file 是一个非终端标记而 NAME
+是一个终端标记。
+        </p></div><p>用 Yacc 来创建一个编译器包括四个步骤：</p><ol><li>通过在语法文件上运行 Yacc 生成一个解析器。</li><li>说明语法：
+          <ul class="ibm-bullet-list"><li>编写一个 .y 的语法文件（同时说明 C 在这里要进行的动作）。</li><li>编写一个词法分析器来处理输入并将标记传递给解析器。 这可以使用
+Lex 来完成。</li><li>编写一个函数，通过调用 yyparse() 来开始解析。</li><li>编写错误处理例程（如 yyerror()）。</li></ul></li><li>编译 Yacc 生成的代码以及其他相关的源文件。</li><li>将目标文件链接到适当的可执行解析器库。</li></ol><div class="ibm-alternate-rule"><hr></div><p class="ibm-ind-link ibm-back-to-top"><a href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#ibm-pcon" class="ibm-anchor-up-link">回页首</a></p><h2 id="10">用 Yacc 编写语法</h2><p>
+如同 Lex 一样, 一个 Yacc 程序也用双百分号分为三段。
+它们是：声明、语法规则和 C 代码。 我们将解析一个格式为 姓名 = 年龄
+的文件作为例子，来说明语法规则。
+我们假设文件有多个姓名和年龄，它们以空格分隔。 在看 Yacc
+程序的每一段时，我们将为我们的例子编写一个语法文件。</p><div class="ibm-alternate-rule"><hr></div><p class="ibm-ind-link ibm-back-to-top"><a href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#ibm-pcon" class="ibm-anchor-up-link">回页首</a></p><h2 id="11">C 与 Yacc 的声明</h2><p>
+C 声明可能会定义动作中使用的类型和变量，以及宏。
+还可以包含头文件。每个 Yacc
+声明段声明了终端符号和非终端符号（标记）的名称，还可能描述操作符优先级和针对不同符号的数据类型。
+lexer (Lex) 一般返回这些标记。所有这些标记都必须在 Yacc
+声明中进行说明。</p><p>在文件解析的例子中我们感兴趣的是这些标记：name, equal sign, 和
+age。Name 是一个完全由字符组成的值。 Age
+是数字。于是声明段就会像这样：</p><h5 id="N102DF">文件解析例子的声明</h5><div class="codesection"><pre class="displaycode">       %
+        #typedef char* string; /*
+        to specify token types as char* */
+        #define YYSTYPE string /*
+        a Yacc variable which has the value of returned token */
+        %}
+        %token NAME EQ AGE
+        %%</pre></div><p>你可能会觉得 YYSTYPE 有点奇怪。但是类似 Lex, Yacc
+也有一套变量和函数可供用户来进行功能扩展。 YYSTYPE 定义了用来将值从
+lexer 拷贝到解析器或者 Yacc 的 yylval （另一个 Yacc 变量）的类型。
+默认的类型是 int。 由于字符串可以从 lexer 拷贝，类型被重定义为
+char*。 关于 Yacc 变量的详细讨论，请参考 Yacc 手册（见 
+        <a href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#resources">资源</a>）。
+      </p><div class="ibm-alternate-rule"><hr></div><p class="ibm-ind-link ibm-back-to-top"><a href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#ibm-pcon" class="ibm-anchor-up-link">回页首</a></p><h2 id="12">Yacc 语法规则</h2><p>
+Yacc 语法规则具有以下一般格式：</p><div class="codesection"><pre class="displaycode">       result: components { /*
+        action to be taken in C */ }
+        ;</pre></div><p>在这个例子中，result 是规则描述的非终端符号。Components
+是根据规则放在一起的不同的终端和非终端符号。 如果匹配特定序列的话
+Components 后面可以跟随要执行的动作。 考虑如下的例子：</p><div class="codesection"><pre class="displaycode">       param : NAME EQ NAME {
+        printf("\tName:%s\tValue(name):%s\n", $1,$3);}
+            | NAME EQ VALUE{
+            printf("\tName:%s\tValue(value):%s\n",$1,$3);}
+        ;</pre></div><p>如果上例中序列 NAME EQ NAME 被匹配，将执行相应的 { }
+括号中的动作。 这里另一个有用的就是 $1 和 $3 的使用, 它们引用了标记
+NAME 和 NAME（或者第二行的 VALUE）的值。 lexer 通过 Yacc 的变量
+yylval 返回这些值。标记 NAME 的 Lex 代码是这样的：</p><div class="codesection"><pre class="displaycode">       char [A-Za-z]
+        name {char}+
+        %%
+        {name} { yylval = strdup(yytext);
+        return NAME; }</pre></div><p>文件解析例子的规则段是这样的：</p><h5 id="N10306">文件解析的语法</h5><div class="codesection"><pre class="displaycode">       file : record file
+        | record
+        ;
+        record: NAME EQ AGE {
+        printf("%s is now %s years old!!!", $1, $3);}
+        ;
+        %%</pre></div><div class="ibm-alternate-rule"><hr></div><p class="ibm-ind-link ibm-back-to-top"><a href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#ibm-pcon" class="ibm-anchor-up-link">回页首</a></p><h2 id="13">附加 C 代码</h2><p>
+现在让我们看一下语法文件的最后一段，附加 C 代码。
+（这一段是可选的，如果有人想要略过它的话：）一个函数如 main() 调用
+yyparse() 函数（Yacc 中 Lex 的 yylex() 等效函数）。 一般来说，Yacc
+最好提供 yyerror(char msg) 函数的代码。 当解析器遇到错误时调用
+yyerror(char msg)。错误消息作为参数来传递。 一个简单的 yyerror(
+char* ) 可能是这样的：</p><div class="codesection"><pre class="displaycode">       int yyerror(char* msg)
+        {
+        printf("Error: %s
+        encountered at line number:%d\n", msg, yylineno);
+        }</pre></div><p>yylineno 提供了行数信息。</p><p>这一段还包括文件解析例子的主函数：</p><h5 id="N1031D">附加 C 代码</h5><div class="codesection"><pre class="displaycode">       void main()
+        {
+            yyparse();
+        }
+        int yyerror(char* msg)
+        {
+        printf("Error: %s
+        encountered \n", msg);</pre></div><p>要生成代码，可能用到以下命令：</p><div class="codesection"><pre class="displaycode">       $ yacc _d &lt;filename.y&gt;</pre></div><p>这生成了输出文件 y.tab.h 和 y.tab.c，它们可以用 UNIX
+上的任何标准 C 编译器来编译（如 gcc）。</p><div class="ibm-alternate-rule"><hr></div><p class="ibm-ind-link ibm-back-to-top"><a href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#ibm-pcon" class="ibm-anchor-up-link">回页首</a></p><h2 id="14">命令行的其他常用选项</h2><ul class="ibm-bullet-list"><li><em>'-d' ,'--defines'</em> :
+编写额外的输出文件，它们包含这些宏定义：语法中定义的标记类型名称，语义的取值类型
+          <em>YYSTYPE</em>, 以及一些外部变量声明。如果解析器输出文件名叫
+'name.c', 那么 '-d' 文件就叫做 'name.h'。 如果你想将 
+          <em>yylex</em>
+定义放到独立的源文件中，你需要 'name.h', 因为 
+          <em>yylex</em>
+必须能够引用标记类型代码和 
+          <em>yylval</em>变量。
+        </li><li><em>'-b file-prefix' ,'--file-prefix=prefix'</em> :
+指定一个所有Yacc输出文件名都可以使用的前缀。选择一个名字，就如输入文件名叫
+'prefix.c'.
+        </li><li><em>'-o outfile' ,'--output-file=outfile'</em> :
+指定解析器文件的输出文件名。其他输出文件根据 '-d'
+选项描述的输出文件来命名。
+        </li></ul><p>Yacc
+库通常在编译步骤中自动被包括。但是它也能被显式的包括，以便在编译步骤中指定
+        <em>�ly</em>选项。这种情况下的编译命令行是：
+      </p><div class="codesection"><pre class="displaycode">       $ cc &lt;source file
+        names&gt; -ly</pre></div><div class="ibm-alternate-rule"><hr></div><p class="ibm-ind-link ibm-back-to-top"><a href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#ibm-pcon" class="ibm-anchor-up-link">回页首</a></p><h2 id="15">将 Lex 与 Yacc 结合起来</h2><p>
+到目前为止我们已经分别讨论了 Lex 和
+Yacc。现在让我们来看一下他们是怎样结合使用的。</p><p>一个程序通常在每次返回一个标记时都要调用
+        <em>yylex()</em>
+函数。只有在文件结束或者出现错误标记时才会终止。
+      </p><p>一个由 Yacc 生成的解析器调用
+        <em>yylex()</em>
+函数来获得标记。 
+        <em>yylex()</em> 可以由 Lex
+来生成或完全由自己来编写。 对于由 Lex 生成的 lexer 来说，要和 Yacc
+结合使用，每当 Lex 中匹配一个模式时都必须返回一个标记。 因此 Lex
+中匹配模式时的动作一般格式为：
+      </p><div class="codesection"><pre class="displaycode">       {pattern} { /* do smthg*/
+        return TOKEN_NAME; }</pre></div><p>于是 Yacc 就会获得返回的标记。当 Yacc 编译一个带有 _d 标记的
+        <em>.y</em>文件时，会生成一个头文件，它对每个标记都有
+        <em>#define</em>
+的定义。 如果 Lex 和 Yacc 一起使用的话，头文件必须在相应的 Lex 文件
+        <em>.lex</em>中的 C 声明段中包括。
+      </p><p>让我们回到名字和年龄的文件解析例子中，看一看 Lex 和 Yacc
+文件的代码。</p><h5 id="N10379">Name.y - 语法文件</h5><div class="codesection"><pre class="displaycode">       %
+        typedef char* string;
+        #define YYSTYPE string
+        %}
+        %token NAME EQ AGE
+        %%
+        file : record file
+        | record
+        ;
+        record : NAME EQ AGE {
+        printf("%s is %s years old!!!\n", $1, $3); }
+        ;
+        %%
+        int main()
+        {
+        yyparse();
+        return 0;
+        }
+        int yyerror(char *msg)
+        {
+        printf("Error
+        encountered: %s \n", msg);
+        }</pre></div><h5 id="N10381">Name.lex - Lex 的解析器文件</h5><div class="codesection"><pre class="displaycode">       %{
+        #include "y.tab.h"
+        
+        #include &lt;stdio.h&gt;
+        #include &lt;string.h&gt;
+        extern char* yylval;
+        %}
+        char [A-Za-z]
+        num [0-9]
+        eq [=]
+        name {char}+
+        age {num}+
+        %%
+        {name} { yylval = strdup(yytext);
+        return NAME; }
+        {eq} { return EQ; }
+        {age} { yylval = strdup(yytext);
+        return AGE; }
+        %%
+        int yywrap()
+        {
+        return 1;
+        }</pre></div><p>作为一个参考，我们列出了
+        <em>y.tab.h</em>, Yacc 生成的头文件。
+      </p><h5 id="N1038E">y.tab.h - Yacc 生成的头文件</h5><div class="codesection"><pre class="displaycode">       # define NAME 257
+        # define EQ 258
+        # define AGE 259</pre></div><p>我们对于 Lex 和
+Yacc的讨论到此为止。今天你想要编译什么语言呢？</p><!--CMA ID: 22294--><!--Site ID: 10--><!--XSLT stylesheet used to transform this file: dw-document-html-7.0.xsl-->
+
+
+</div>
+</div>
+<!-- 1_1_COLUMN_END -->
+
+<!-- SPLIT_COLUMNS_BEGIN -->
+<div class="ibm-columns">
+
+<!-- 6_4_COLUMN_BEGIN -->
+<div class="ibm-col-6-4">
+
+<h2 id="resources" class="ibm-rule">参考资料 </h2><ul class="ibm-bullet-list"><li>您可以参阅本文在 developerWorks 全球站点上的
+          <a href="http://www.ibm.com/developerworks/library/l-lex.html?S_TACT=105AGX52&amp;S_CMP=cn-a-l">英文原文</a>.
+        </li><li><a href="http://www.amazon.com/exec/obidos/ASIN/1565920007/qid=966761542/sr=1-1/102-9713829-1677713">Lex and Yacc</a>, Levine, Mason 和 Branson, O�Reilly
+及其合作公司，2nd Ed。
+        </li><li><a href="http://www.amazon.com/exec/obidos/ASIN/0132373971/qid=966761701/sr=1-2/102-9713829-1677713">Program Development in UNIX</a>, J. T. Shen, Prentice-Hall
+India。
+        </li><li><a href="http://www.amazon.com/exec/obidos/ASIN/0201100886/o/qid=966761739/sr=2-1/102-9713829-1677713">Compilers: Principles, Techniques and Tools</a>, Ahoo, Sethi 和
+Ullman, Addison-Wesley Pub. Co., 1985，11。
+        </li><li><a href="http://tinf2.vub.ac.be/~dvermeir/courses/compilers/">Lex and
+Yacc and compiler writing</a>指导。
+        </li><li>Java 版的 Lex 指导, 叫做
+          <a href="http://bmrc.berkeley.edu/courseware/cs164/fall99/assignment/a1/tutorial.html">Jlex</a>。
+        </li><li>使用 Lex 和 Yacc 的
+          <a href="http://www.cs.man.ac.uk/~pjj/cs2111/ex5_hint.html">formalizing
+a grammar</a>实例。
+        </li></ul>
+
+<!-- INLINE_COMMENTS_BEGIN -->
+<h2 id="icomments" class="ibm-alternate-rule ibm-no-print">条评论</h2>
+    
+<div class="ibm-no-print" id="dw-icomments-container">	
+	<div id="threadShow"><img id="imgPlHdr" src="./Yacc 与 Lex 快速入门_files/animated-progress-38x38c.gif" alt="" style="display: none;"><div id="cmtTog"><div class="ibm-container ibm-alternate-two dw-commentbox dw-noborder"><div class="ibm-container-body dw-commentbox dw-noborder"><p id="signInSect">请 <a onclick="var e=arguments[0] || window.event; dwsi.siInst &amp;&amp; dwsi.siInst.showSignIn(); if (e.stopPropagation){ e.stopPropagation();} else { e.cancelBubble = true; } e.preventDefault &amp;&amp; e.preventDefault(); return false;" href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#">登录</a> 或 <a href="https://www.ibm.com/developerworks/dwwi/jsp/ssoregister.jsp?d=https%3A%2F%2Fwww.ibm.com%2Fdeveloperworks%2Fcn%2Flinux%2Fsdk%2Flex%2F%23icomments&amp;lang=cn&amp;a=dwmav">注册</a>  后发表评论。</p><p id="cmtHead"><label for="newCmt"><strong>添加评论:</strong></label></p><p>注意：评论中不支持 HTML 语法</p><div id="infoCmt"></div><form focus="name" enctype="multipart/form-data" method="post" action="https://www.ibm.com/developerworks/cn/linux/sdk/lex/" name="form" class="ibm-column-form ibm-styled-form"><p class="6-4-textarea"><textarea rows="5" name="newCmt" id="newCmt" class="dw-inoperable" disabled=""></textarea><br></p><span class="ibm-input-group"><input type="checkbox" value="1" name="comment_notification" id="comment_notification" disabled="disabled"><label id="notifyText" class="ibm-form-note dw-btn-cancel-sec" for="comment_notification">有新评论时提醒我</label></span><span class="ibm-form-note dw-btn-cancel-sec notifySection" id="maxCharsCount">剩余 <span id="charCount">1000</span> 字符</span><p class="ibm-buttons-row"><input type="button" value="发布" name="postCmt" id="postCmt" class="ibm-btn-sec ibm-btn-small ibm-disabled" disabled="disabled"></p></form></div></div><div class="ibm-alternate-rule"><hr></div><div id="topControl" class="ibm-container ibm-alternate-two dw-comment-totals" style=""><div class="ibm-container-body"><form id="selectComments" method="get" action="https://www.ibm.com/developerworks/cn/linux/sdk/lex/"><p>&nbsp;<span class="dw-comment-totals-label"><strong>共有评论 (<span id="numCmts">5</span>)</strong></span><span class="dw-how-many-comments-label" style="display:none" id="dropdownCmts"><label for="howManyComments"><strong>显示：</strong></label>&nbsp;<select name="comments" id="howManyComments" class="dw-how-many-comments"><option selected="selected" value="recent">最新评论 </option></select><input type="image" class="ibm-btn-go" name="ibm-go" value="Go" src="./Yacc 与 Lex 快速入门_files/short-btn.gif" alt="Go"><br></span></p></form></div></div><div id="cmtSect"><div class="comment"><div class="dw-icomment-container"><div class="dw-icomment-body dw-noborder"><div class="dw-icomment-body dw-noborder"><p>chars [A-za-z\_'\."]这个正则表达式,好像作者又笔误了一下.A-Za-z....</p><p class="ibm-item-note-alternate dw-item-note-alternate-left">由 <strong><a href="https://www.ibm.com/developerworks/community/profiles/user/%E5%96%9C%E6%AC%A2%E5%B1%B1%E4%B8%98">喜欢山丘</a></strong>  于 2014年07月11日发布 </p><p class="ibm-ind-link ibm-item-note-alternate dw-item-note-alternate-right"><a class="ibm-caution-link dw-report-abuse" href="https://www.ibm.com/developerworks/community/report?lang=zh&amp;referingURL=https://www.ibm.com/developerworks/cn/linux/sdk/lex/&amp;mymessage=%E8%AF%84%E8%AE%BA%EF%BC%9A%20chars%20%5BA-za-z%5C_%27%5C.%22%5D%E8%BF%99%E4%B8%AA%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%2C%E5%A5%BD%E5%83%8F%E4%BD%9C%E8%80%85%E5%8F%88%E7%AC%94%E8%AF%AF%E4%BA%86%E4%B8%80%E4%B8%8B.A-Za-z....%0D%E7%94%B1%20%E5%96%9C%E6%AC%A2%E5%B1%B1%E4%B8%98%20%20%E4%BA%8E%202014%E5%B9%B407%E6%9C%8811%E6%97%A5%E5%8F%91%E5%B8%83%20%0D%0D--%E5%9C%A8%E4%B8%8B%E6%96%B9%E6%B7%BB%E5%8A%A0%E8%AF%84%E8%AE%BA--" target="_self">报告滥用</a></p><div class="dw-clear-both"></div></div></div></div></div><div class="ibm-rule"><hr></div><div class="comment"><div class="dw-icomment-container"><div class="dw-icomment-body dw-noborder"><div class="dw-icomment-body dw-noborder"><p>(A[b-e])+  匹配在 A 出现位置后跟随的从 b 到 e 的所有字符中的 0 个或 1个。 <br>上面的解释也不对吧,<br>匹配在 A 出现位置后跟随的从 b 到 e 的所有字符中的 1个组成的整体的重复至少1次吧</p><p class="ibm-item-note-alternate dw-item-note-alternate-left">由 <strong><a href="https://www.ibm.com/developerworks/community/profiles/user/%E5%96%9C%E6%AC%A2%E5%B1%B1%E4%B8%98">喜欢山丘</a></strong>  于 2014年07月11日发布 </p><p class="ibm-ind-link ibm-item-note-alternate dw-item-note-alternate-right"><a class="ibm-caution-link dw-report-abuse" href="https://www.ibm.com/developerworks/community/report?lang=zh&amp;referingURL=https://www.ibm.com/developerworks/cn/linux/sdk/lex/&amp;mymessage=%E8%AF%84%E8%AE%BA%EF%BC%9A%20(A%5Bb-e%5D)%2B%20%20%E5%8C%B9%E9%85%8D%E5%9C%A8%20A%20%E5%87%BA%E7%8E%B0%E4%BD%8D%E7%BD%AE%E5%90%8E%E8%B7%9F%E9%9A%8F%E7%9A%84%E4%BB%8E%20b%20%E5%88%B0%20e%20%E7%9A%84%E6%89%80%E6%9C%89%E5%AD%97%E7%AC%A6%E4%B8%AD%E7%9A%84%200%20%E4%B8%AA%E6%88%96%201%E4%B8%AA%E3%80%82%20%E4%B8%8A%E9%9D%A2%E7%9A%84%E8%A7%A3%E9%87%8A%E4%B9%9F%E4%B8%8D%E5%AF%B9%E5%90%A7%2C%E5%8C%B9%E9%85%8D%E5%9C%A8%20A%20%E5%87%BA%E7%8E%B0%E4%BD%8D%E7%BD%AE%E5%90%8E%E8%B7%9F%E9%9A%8F%E7%9A%84%E4%BB%8E%20b%20%E5%88%B0%20e%20%E7%9A%84%E6%89%80%E6%9C%89%E5%AD%97%E7%AC%A6%E4%B8%AD%E7%9A%84%201%E4%B8%AA%E7%BB%84%E6%88%90%E7%9A%84%E6%95%B4%E4%BD%93%E7%9A%84%E9%87%8D%E5%A4%8D%E8%87%B3%E5%B0%911%E6%AC%A1%E5%90%A7%0D%E7%94%B1%20%E5%96%9C%E6%AC%A2%E5%B1%B1%E4%B8%98%20%20%E4%BA%8E%202014%E5%B9%B407%E6%9C%8811%E6%97%A5%E5%8F%91%E5%B8%83%20%0D%0D--%E5%9C%A8%E4%B8%8B%E6%96%B9%E6%B7%BB%E5%8A%A0%E8%AF%84%E8%AE%BA--" target="_self">报告滥用</a></p><div class="dw-clear-both"></div></div></div></div></div><div class="ibm-rule"><hr></div><div class="comment"><div class="dw-icomment-container"><div class="dw-icomment-body dw-noborder"><div class="dw-icomment-body dw-noborder"><p>哥们,你那常规正则表达式举例有点问题吧<br>A{1,2}shis+  匹配 AAshis, Ashis, AAshi, Ashi。 <br>上面是s+,肯定结尾有s或多个s,不可能出现Ashi,AAshi吧</p><p class="ibm-item-note-alternate dw-item-note-alternate-left">由 <strong><a href="https://www.ibm.com/developerworks/community/profiles/user/%E5%96%9C%E6%AC%A2%E5%B1%B1%E4%B8%98">喜欢山丘</a></strong>  于 2014年07月11日发布 </p><p class="ibm-ind-link ibm-item-note-alternate dw-item-note-alternate-right"><a class="ibm-caution-link dw-report-abuse" href="https://www.ibm.com/developerworks/community/report?lang=zh&amp;referingURL=https://www.ibm.com/developerworks/cn/linux/sdk/lex/&amp;mymessage=%E8%AF%84%E8%AE%BA%EF%BC%9A%20%E5%93%A5%E4%BB%AC%2C%E4%BD%A0%E9%82%A3%E5%B8%B8%E8%A7%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%B8%BE%E4%BE%8B%E6%9C%89%E7%82%B9%E9%97%AE%E9%A2%98%E5%90%A7A%7B1%2C2%7Dshis%2B%20%20%E5%8C%B9%E9%85%8D%20AAshis%2C%20Ashis%2C%20AAshi%2C%20Ashi%E3%80%82%20%E4%B8%8A%E9%9D%A2%E6%98%AFs%2B%2C%E8%82%AF%E5%AE%9A%E7%BB%93%E5%B0%BE%E6%9C%89s%E6%88%96%E5%A4%9A%E4%B8%AAs%2C%E4%B8%8D%E5%8F%AF%E8%83%BD%E5%87%BA%E7%8E%B0Ashi%2CAAshi%E5%90%A7%0D%E7%94%B1%20%E5%96%9C%E6%AC%A2%E5%B1%B1%E4%B8%98%20%20%E4%BA%8E%202014%E5%B9%B407%E6%9C%8811%E6%97%A5%E5%8F%91%E5%B8%83%20%0D%0D--%E5%9C%A8%E4%B8%8B%E6%96%B9%E6%B7%BB%E5%8A%A0%E8%AF%84%E8%AE%BA--" target="_self">报告滥用</a></p><div class="dw-clear-both"></div></div></div></div></div><div class="ibm-rule"><hr></div><div class="comment"><div class="dw-icomment-container"><div class="dw-icomment-body dw-noborder"><div class="dw-icomment-body dw-noborder"><p>"Name.lex 和 Name.y 在 Ubuntu12.10 下没通过，需要在Name.lex第一段中添加#include &lt;stdio.h&gt; 和 #define YYSTYPE char* 才能通过。</p><p class="ibm-item-note-alternate dw-item-note-alternate-left">由 <strong><a href="https://www.ibm.com/developerworks/community/profiles/user/qinxinjianpo">qinxinjianpo</a></strong>  于 2013年08月13日发布 </p><p class="ibm-ind-link ibm-item-note-alternate dw-item-note-alternate-right"><a class="ibm-caution-link dw-report-abuse" href="https://www.ibm.com/developerworks/community/report?lang=zh&amp;referingURL=https://www.ibm.com/developerworks/cn/linux/sdk/lex/&amp;mymessage=%E8%AF%84%E8%AE%BA%EF%BC%9A%20%22Name.lex%20%E5%92%8C%20Name.y%20%E5%9C%A8%20Ubuntu12.10%20%E4%B8%8B%E6%B2%A1%E9%80%9A%E8%BF%87%EF%BC%8C%E9%9C%80%E8%A6%81%E5%9C%A8Name.lex%E7%AC%AC%E4%B8%80%E6%AE%B5%E4%B8%AD%E6%B7%BB%E5%8A%A0%23include%20%26lt%3Bstdio.h%26gt%3B%20%E5%92%8C%20%23define%20YYSTYPE%20char*%20%E6%89%8D%E8%83%BD%E9%80%9A%E8%BF%87%E3%80%82%0D%E7%94%B1%20qinxinjianpo%20%20%E4%BA%8E%202013%E5%B9%B408%E6%9C%8813%E6%97%A5%E5%8F%91%E5%B8%83%20%0D%0D--%E5%9C%A8%E4%B8%8B%E6%96%B9%E6%B7%BB%E5%8A%A0%E8%AF%84%E8%AE%BA--" target="_self">报告滥用</a></p><div class="dw-clear-both"></div></div></div></div></div><div class="ibm-rule"><hr></div><div class="comment"><div class="dw-icomment-container"><div class="dw-icomment-body dw-noborder"><div class="dw-icomment-body dw-noborder"><p>Nice article!</p><p class="ibm-item-note-alternate dw-item-note-alternate-left">由 <strong><a href="https://www.ibm.com/developerworks/community/profiles/user/liang456">liang456</a></strong>  于 2012年10月20日发布 </p><p class="ibm-ind-link ibm-item-note-alternate dw-item-note-alternate-right"><a class="ibm-caution-link dw-report-abuse" href="https://www.ibm.com/developerworks/community/report?lang=zh&amp;referingURL=https://www.ibm.com/developerworks/cn/linux/sdk/lex/&amp;mymessage=%E8%AF%84%E8%AE%BA%EF%BC%9A%20Nice%20article!%0D%E7%94%B1%20liang456%20%20%E4%BA%8E%202012%E5%B9%B410%E6%9C%8820%E6%97%A5%E5%8F%91%E5%B8%83%20%0D%0D--%E5%9C%A8%E4%B8%8B%E6%96%B9%E6%B7%BB%E5%8A%A0%E8%AF%84%E8%AE%BA--" target="_self">报告滥用</a></p><div class="dw-clear-both"></div></div></div></div></div></div></div><div id="bottomControl" class="ibm-container ibm-alternate-two dw-comment-totals" style="display:none"><div class="ibm-container-body"><form id="selectComments2" method="get" action="https://www.ibm.com/developerworks/cn/linux/sdk/lex/"><p>&nbsp;<span class="dw-comment-totals-label"><strong>共有评论 (<span id="numCmts2">5</span>)</strong></span><span class="dw-how-many-comments-label" style="display:none" id="dropdownCmts2"><label for="howManyComments2"><strong>显示：</strong></label>&nbsp;<select name="comments" id="howManyComments2" class="dw-how-many-comments"><option selected="selected" value="recent">最新评论 </option></select><input type="image" class="ibm-btn-go" name="ibm-go" value="Go" src="./Yacc 与 Lex 快速入门_files/short-btn.gif" alt="Go"><br></span></p></form></div></div></div>
+</div>
+<!-- Sign in OVERLAY STARTS HERE -->
+    
+<!-- Sign in OVERLAY STARTS HERE -->
+<div class="ibm-common-overlay" id="signin_overlay">
+<div class="ibm-head">
+<p><a class="ibm-common-overlay-close" href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#" onclick="dwsi.siInst.clearForm();">关闭 [x]</a></p>
+</div>
+<div class="ibm-body">
+<div class="ibm-main">
+
+ <div class="ibm-title">
+<h2>developerWorks: 登录</h2>
+<div id="ibm-overlay-error-signin" class="no-display"></div>
+</div>
+<div class="ibm-container ibm-alternate ibm-buttons-last">
+<div class="ibm-container-body">
+<p class="ibm-overlay-intro">标有星（<span class="ibm-required">*</span>）号的字段是必填字段。</p> 
+<form class="ibm-column-form" id="sFormId" action="https://www.ibm.com/developerworks/cn/linux/sdk/lex/" method="post" name="sForm" onsubmit="return false;">
+<p><label for="ibmid">IBM ID:<span class="ibm-required">*</span></label><span>
+    <input name="ibm-id" id="ibmid" size="25" value="" class="required" type="text" onkeypress="dwsi.siInst.handleEP(event,this.form);" aria-required="true">
+    <br><a onclick="window.location=&#39;/developerworks/dwwi/DWAuthRouter?m=reg&amp;lang=zh_CN&amp;d=&#39;+encodeURIComponent(location.protocol + &#39;//&#39; + location.hostname + location.pathname + &#39;#icomments&#39;); return false;" href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#" class="ibm-forward-link">需要一个 IBM ID？</a> <br>
+    <a class="ibm-forward-link" href="https://www.ibm.com/developerworks/dwwi/jsp/WSHelp.jsp?lang=zh_CN">忘记 IBM ID？</a> 
+</span>
+</p> 
+<p><label for="password">密码：<span class="ibm-required">*</span></label><span>
+    <input name="password" id="password" size="25" value="" class="required" type="password" onkeypress="dwsi.siInst.handleEP(event,this.form);">
+    <br><a class="ibm-forward-link" href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#" onclick="(function ()
+        {window.location=&#39;https://www.ibm.com/account/profile?page=forgot&amp;lang=zh_CN&amp;appname=ibm&amp;required=null&amp;d=&#39;+encodeURIComponent(dwsi.siInst.getAuthUrl())+&#39;%3Fm%3Dloginpage%26lang%3Dzh_CN%26d%3D&#39;+encodeURIComponent(location.href);})();">忘记密码？</a>
+    <br><a class="ibm-forward-link" href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#" onclick="(function () {window.location=&#39;https://www.ibm.com/account/profile?page=chpw&amp;lang=zh_CN&amp;appname=ibm&amp;required=null&amp;d=&#39;+encodeURIComponent(location.href);})();">更改您的密码</a></span></p> 
+<p class="dw-perm-box">
+	<span><input id="perm" type="checkbox" name="perm_name"><label for="perm"> 保持登录。</label></span>
+</p>
+<p>单击提交则表示您同意developerWorks 的条款和条件。 <a href="https://www.ibm.com/developerworks/community/terms?lang=zh">查看条款和条件</a>。</p>
+<div class="ibm-buttons-row">
+   <p><input class="ibm-btn-arrow-pri" name="ibm-submit" value="提交" onclick="dwsi.siInst.signin();return false;" type="submit"><span class="ibm-sep">&nbsp;</span>
+<input value="取消" type="button" name="ibm-cancel" class="ibm-btn-cancel-sec" onclick="dwsi.siInst.clearForm();ibmweb.overlay.hide(&#39;signin_overlay&#39;);return false;"></p>
+</div>
+</form>
+ <div class="ibm-overlay-rule"><hr></div> 
+
+<p>在您首次登录 developerWorks 时，会为您创建一份个人概要。<strong>您的个人概要中的信息（您的姓名、国家/地区，以及公司名称）是公开显示的，而且会随着您发布的任何内容一起显示，除非您选择隐藏您的公司名称。</strong>您可以随时更新您的 IBM 帐户。</p>
+<div><p class="dw-c-overlay-secure">所有提交的信息确保安全。</p></div>
+</div>
+</div>
+</div>
+</div>
+<div class="ibm-footer"></div>
+</div>
+<!-- Display name OVERLAY STARTS HERE -->
+<div class="ibm-common-overlay" id="displayname_overlay">
+<div class="ibm-head">
+<p><a class="ibm-common-overlay-close" href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#" onclick="dwsi.siInst.clearForm();">关闭 [x]</a></p>
+</div>
+<div class="ibm-body">
+<div class="ibm-main">
+<div class="ibm-title">
+<h2>选择您的昵称</h2><br><br>
+<div id="ibm-overlay-error-dname" class="no-display"></div>
+</div>
+<div class="ibm-container ibm-alternate ibm-buttons-last">
+<div class="ibm-container-body">
+<p class="ibm-overlay-intro">当您初次登录到 developerWorks 时，将会为您创建一份概要信息，您需要指定一个昵称。您的昵称将和您在 developerWorks 发布的内容显示在一起。</p><p><strong>昵称长度在 3 至 31 个字符之间</strong>。 
+    您的昵称在 developerWorks 社区中必须是唯一的，并且出于隐私保护的原因，不能是您的电子邮件地址。</p>
+<p class="ibm-overlay-intro">标有星（<span class="ibm-required">*</span>）号的字段是必填字段。</p> 
+<form id="dFormId" method="post" action="https://www.ibm.com/developerworks/cn/linux/sdk/lex/" name="dForm" onsubmit="return false;" class="ibm-column-form">
+<p><label for="displayname">昵称：<span class="ibm-required">*</span></label><span>
+    <input name="displayname" id="displayname" size="25" value="" type="text" onkeypress="dwsi.siInst.handleEP(event,this.form);" aria-required="true"></span>
+    <span class="ibm-form-note">(昵称长度在 3 至 31 个字符之间)</span>
+</p>
+<p>单击<strong>提交</strong>则表示您同意developerWorks 的条款和条件。 <a href="https://www.ibm.com/developerworks/community/terms?lang=zh">查看条款和条件</a>.</p>
+<div class="ibm-buttons-row">
+   <p><input class="ibm-btn-arrow-pri" name="ibm-submit" value="提交" onclick="dwsi.siInst.signin();return false;" type="submit"><span class="ibm-sep">&nbsp;</span>
+<input value="取消" type="button" name="ibm-cancel" class="ibm-btn-cancel-sec" onclick="dwsi.siInst.clearForm();ibmweb.overlay.hide(&#39;displayname_overlay&#39;);return false;"></p>
+</div>
+</form>
+<div class="ibm-overlay-rule"><hr></div>
+<div><p class="dw-c-overlay-secure">所有提交的信息确保安全。</p></div>
+</div>
+</div>
+</div>
+</div>
+<div class="ibm-footer"></div>
+</div>
+
+
+<!-- INLINE_COMMENTS_END -->
+
+</div>
+<!-- 6_4_COLUMN_END -->
+
+<!-- 6_2_COLUMN_BEGIN -->
+<div class="ibm-col-6-2">
+
+<!-- Next_Steps -->
+<!-- Dig_Deeper -->
+
+
+<!-- Promotion_Module -->
+    
+<!-- PROMOTION_MODULE_START -->
+<div class="ibm-alternate-rule"><hr></div>
+<ul class="ibm-portrait-module-list">
+<li><a class="" href="http://www.ibm.com/developerworks/cn/cloud/bluemix/" tabindex="-1" role="presentation"><img height="60" width="60" src="./Yacc 与 Lex 快速入门_files/sm-f-bluemixrobot60.png" alt="IBM Bluemix 资源中心"></a>
+<h3><a class="ibm-feature-link" href="http://www.ibm.com/developerworks/cn/cloud/bluemix/">IBM Bluemix 资源中心</a></h3>
+<p>文章、教程、演示，帮助您构建、部署和管理云应用。</p></li>
+<li><a class="" href="http://www.ibm.com/developerworks/cn/community/" tabindex="-1" role="presentation"><img height="60" width="60" src="./Yacc 与 Lex 快速入门_files/sm-f-comcommunity60.png" alt="developerWorks 中文社区"></a>
+<h3><a class="ibm-feature-link" href="http://www.ibm.com/developerworks/cn/community/">developerWorks 中文社区</a></h3>
+<p>立即加入来自 IBM 的专业 IT 社交网络。</p></li>
+<li><a class="" href="http://bluemixathon.devpost.com/" tabindex="-1" role="presentation"><img height="60" width="60" src="./Yacc 与 Lex 快速入门_files/sm-f-bluemixathon60.png" alt="Bluemixathon 挑战赛"></a>
+<h3><a class="ibm-feature-link" href="http://bluemixathon.devpost.com/">Bluemixathon 挑战赛</a></h3>
+<p>为灾难恢复构建应用，赢取现金大奖。</p></li>
+</ul>
+<!-- PROMOTION_MODULE_END -->
+</div>
+<!-- 6_2_COLUMN_END -->
+
+</div>
+<!-- SPLIT_COLUMNS_END -->
+
+<!-- BOTTOM_BACK_TO_TOP -->
+<div class="ibm-columns">
+<div class="ibm-col-1-1">
+	<div class="ibm-alternate-rule"><hr></div><p class="ibm-ind-link ibm-back-to-top"><a href="https://www.ibm.com/developerworks/cn/linux/sdk/lex/#ibm-pcon" class="ibm-anchor-up-link">回页首</a></p>
+</div>
+</div>
+
+<!-- Rating_Meta_BEGIN -->
+<!--Rating_Meta_BEGIN--><div class="metavalue">static.content.url=http://www.ibm.com/developerworks/js/artrating/</div><div class="metavalue">SITE_ID=10</div><div class="metavalue">Zone=Linux</div><div class="metavalue">ArticleID=22294</div><div class="metavalue">ArticleTitle=Yacc 与 Lex 快速入门</div><div class="metavalue">publish-date=11012000</div><script language="javascript" type="text/javascript">document.write('<div class="metavalue">url='+location.href.replace(/</g,  '%3C')+'</div>');</script><div class="metavalue">url=https://www.ibm.com/developerworks/cn/linux/sdk/lex/</div><!--Rating_Meta_END-->
+<!-- Rating_Meta_END -->
+
+</div>
+<!-- END_IBM_CONTENT_MAIN -->
+
+</div>
+<!-- END_IBM_CONTENT_BODY -->
+
+</div>
+<!-- END_IBM_CONTENT -->
+
+</div></div>
+<!-- LEADSPACE_END -->
+
+
+<!-- END_IBM_PCON -->
+<!-- FOOTER_BEGIN -->
+<div id="ibm-footer" aria-label="页脚"><!-- IBM footer container; disabled --></div>
+
+<div id="ibm-footer-module-dwwrapper" role="contentinfo" aria-label="developerWorks Footer">
+
+<div id="ibm-footer-module-dw">
+	<div class="dw-footer-columns">
+		<div class="dw-footer-col-6-1 dw-footer-col-6-1-cn">
+			<ul>
+				<li><a href="https://www.ibm.com/developerworks/secure/feedback.jsp?domain=dwchina" tabindex="0">帮助</a></li>
+				<li><a href="http://www.ibm.com/developerworks/cn/author/" tabindex="0">联系编辑</a></li>
+				<li><a href="https://www.ibm.com/developerworks/secure/myideas2.jsp?domain=dwchina" tabindex="0">提交内容</a></li>
+				<li><a href="http://www.ibm.com/developerworks/cn/rss/" tabindex="0">订阅源</a></li>
+			</ul>
+        </div>
+		<div class="dw-footer-col-6-2">
+			<ul>
+				<li><a class="dwcn-sina-link" href="http://weibo.com/ibmdw/" target="_blank" tabindex="0">新浪微博</a></li>
+				<li><a href="https://www.ibm.com/developerworks/community/report?lang=zh" tabindex="0">报告滥用</a></li>
+				<li><a href="https://www.ibm.com/developerworks/community/terms?lang=zh" tabindex="0">使用条款</a></li>
+				<li><a href="https://www.ibm.com/developerworks/cn/community/terms/thirdparty/" tabindex="0">第三方提示</a></li>
+			</ul>
+		</div>
+		<div class="dw-footer-col-6-3">
+			<ul>
+				<li><a href="http://www.ibm.com/privacy/cn/zh/" tabindex="0">隐私条约</a></li>
+				<li><a href="http://www.ibm.com/ibm/accessibility/cn/" tabindex="0">浏览辅助</a></li>
+				<li><a href="http://www.ibm.com/developerworks/cn/academic/" tabindex="0">IBM 教育学院教育培养计划</a></li><li><a href="http://www.ibm.com/developerworks/cn/gep/">IBM 创业企业全球扶持计划</a></li><li><a href="http://www.ibm.com/partnerworld/isv/">ISV 资源 (英语)</a></li>
+			</ul>
+		</div>
+		<div class="dw-footer-col-6-4"> 
+			<ul>
+				<li><a href="https://www.ibm.com/developerworks/cn/newsletter/" tabindex="0">dW 中国每周时事通讯</a></li>
+			</ul>
+			
+		</div>
+		<div class="dw-footer-col-6-5">
+			<ul>
+				<li class="dw-footer-lang-head">选择语言：</li>
+				<li><a href="http://www.ibm.com/developerworks/" tabindex="0">English</a></li>
+				<li><a href="http://www.ibm.com/developerworks/cn/" lang="zh" tabindex="0">中文</a></li>
+				<li><a href="http://www.ibm.com/developerworks/jp/" lang="ja" tabindex="0">日本語</a></li>
+				<li><a href="http://www.ibm.com/developerworks/ru/" lang="ru" tabindex="0">Русский</a></li>
+				<li><a href="http://www.ibm.com/developerworks/br/" lang="pt" tabindex="0">Português (Brasil)</a></li>
+				<li><a href="http://www.ibm.com/developerworks/ssa/" lang="es" tabindex="0">Español</a></li>
+				<li><a href="http://www.ibm.com/developerworks/vn/" lang="vi" tabindex="0">Việt</a></li>
+			</ul>
+		</div>
+		<div class="dw-footer-col-6-6">
+			<img width="223" height="46" alt="IBM®" src="./Yacc 与 Lex 快速入门_files/dwn-ibm-logo-v17.png">
+			<img class="dw-preload" src="./Yacc 与 Lex 快速入门_files/ibm_sprite_social_blue_ON.png" alt="" width="1" height="1">
+		</div>
+	</div>
+</div>
+
+</div><!-- FOOTER_END -->
+
+<!-- END_IBM-TOP -->
+</div>
+
+<!-- SCRIPTS_INCLUDE_BEGIN -->
+<script type="text/javascript" src="./Yacc 与 Lex 快速入门_files/dw-comments.js">//</script>
+<script type="text/javascript" language="JavaScript">
+	dojo.ready(function(){
+		rBHash = typeof rBHash == "undefined" ? {} : rBHash;
+		rBHash['viperLang'] = 'zh';
+		rBHash['urlLang'] = 'cn';
+		rBHash['dwwi2Lang'] = 'zh_CN';
+		rBHash['appCode'] = 'dwmav';
+		rBHash['signoutUrl'] = (location.host.toLowerCase() === "www.ibm.com" || location.host.toLowerCase() === "developer.ibm.com") ? 'http://www.ibm.com/developerworks/cn/' : ''; 
+		dwsi.siInst = new dwweb.dynnav.dwsi();
+		dwsi.siInst.initSI();		
+
+		// construct the comment widget
+dwc.cmts = '条评论';
+dwc.signInPreText = '请';
+dwc.signIn = '登录';
+dwc.or = '或';
+dwc.register = '注册';
+dwc.signInPostText = '';
+dwc.leaveCmt = '后发表评论。';
+dwc.view = '查看';
+dwc.totalCmts = '共有评论';
+dwc.postYourCmt = '添加您的评论';
+dwc.show = '显示：';
+dwc.recentCmts = '最新评论';
+dwc.allCmts = '所有评论';
+dwc.tooLongCmt = '您的评论超过了 1000 字符限制';
+dwc.numCharsLeft = '剩余 <span id="charCount">{1}</span> 字符';
+dwc.reportAbuse = '报告滥用';
+dwc.notifyMsg = '有新评论时提醒我';
+dwc.htmlWarning = '注意：评论中不支持 HTML 语法'; 
+dwc.cmt = '评论：';
+dwc.addCmts = '添加评论';
+dwc.addCmt = '添加评论';
+dwc.doNotErase = '--在下方添加评论--'; 
+dwc.viewOrAddCmts = '查看或添加评论';
+dwc.reportInapprCont = '举报不良信息';
+dwc.reportInapprContLink = 'http://www.ibm.com/developerworks/forums/forum.jspa?forumID=1834';
+dwc.postingCmt = '正在发布评论……';
+dwc.noCmt = '快来添加第一条评论';
+dwc.netwkErr = '在检索评论时出错，请稍后刷新。';
+dwc.addACmt = '添加评论';
+dwc.instructCmt = '标有星号（<span class="ibm-required">*</span>）的是必填项目。';
+dwc.btnPost = '发布';
+dwc.btnPostAnon = '匿名发布';
+dwc.btnClrCmt = '清除评论';
+dwc.btnCancel = '取消';
+dwc.showRecent = '显示最新的 {1} 条评论'; // {1} is the count to be substituted
+dwc.showNext = '显示后 {1} 条评论'; // {1} is the count to be substituted
+dwc.showAllCmts = '显示所有评论';
+dwc.enterCmt = '请输入评论内容。';
+dwc.loginErr = '暂时无法验证您的登录状态，请稍后再试。';
+dwc.postErr = '暂时无法发布您的评论，请稍后再试。';
+dwc.postBy = '由 <strong>{1}</strong>  于 {2} '; // {1} is the author to be substituted; {2} is the date
+dwc.siteId = 10;
+dwc.lang = 'zh_CN';
+dwc.viperLang = 'zh';
+//dwc.abuseHref =  null;
+dwc.maxChars = 1000;
+dwc.cmtTxt =  '评论';
+dwc.cmtsTxt =  '评论';  
+		dwc && new dwc.comments('threadShow','95%',5,'nCmts','icomments');
+		});
+</script>
+
+
+
+<!-- SCRIPTS_INCLUDE_END -->
+
+<div id="ibm-metrics">
+<script src="./Yacc 与 Lex 快速入门_files/stats.js" type="text/javascript">//</script>
+</div>
+
+
+
+<div id="ads"></div></body></html>

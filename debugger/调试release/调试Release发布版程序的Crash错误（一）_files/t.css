@@ -1,0 +1,654 @@
+@charset "utf-8";
+/*
+ * @author dongguang dongguang@staff.sina.com.cn | ldgmc@126.com
+ * @msn:ldgoko@hotmail.com
+ * @copyright sina.com 
+ */
+/* 2008-10 【08平台1.0皮肤新增样式】 edit by Cutsin - fangfei@staff.sina.com.cn */
+/*更改背景*/
+body{
+	background:url(images/bg.jpg) no-repeat center 31px #9caec1;	
+}
+.wrapper{
+	
+}
+/*链接文字颜色*/
+a{
+	color:#074483;
+}
+/*链文字鼠标移入颜色*/
+a:hover{
+	color:#990000;
+}
+/*标准尾样式修改(可添加底部背景图)*/
+.sinaBottom {
+	background:url(images/bottom.gif) no-repeat;
+}
+/*标准尾白色背景时的文字颜色、链接文字颜色
+.sinaBottom ,
+.sinaBottom a,
+.sinaBottom a:link,
+.sinaBottom a:visited,
+.sinaBottom a:hover{
+	color:#555555;
+}
+.sinaBottom_cancel p a{
+	color:#063779
+}
+*/
+/*标准尾黑色背景时的文字颜色、链接文字颜色*/
+.sinaBottom ,
+.sinaBottom a,
+.sinaBottom a:link,
+.sinaBottom a:visited,
+.sinaBottom a:hover{
+	color:#888888;
+}
+.sinaBottom_cancel p a{
+	color:#8299B2
+}
+/*日期时间的颜色*/
+.time{
+		color:#595959;
+}
+/*---------------------------------banner-----------------------------------------------*/
+/*更换banner背景、banner高度*/
+.bannerLayout{
+	height:280px;
+}
+/*banner文字区域距离页面左则距离*/
+.bannerLayout .bannerContent {
+	left:66px;
+	top:48%;
+}
+/*更换banner文字颜色*/
+.bannerLayout .bannerContent .blogUrl,.bannerContent .blogUrl a, .link,.bannerLayout .bannerContent,.bannerLayout .bannerContent .rss a{
+	color:#FFFFFF;
+}
+
+
+/*---------------------------------banner-end--------------------------------------------*/
+
+/*---------------------------------menu-----------------------------------------------*/
+/*更换menu背景、menu高度*/
+.menuLayout{
+	height:64px;
+	background:url(images/menu.png);
+}
+/*主menu的高度*/
+.menuLayout .mainMenu{
+	height:33px;
+}
+/*主menu的颜色*/
+.menuLayout .mainMenu a{
+	color:#074485;
+}
+/*主menu左则用户昵称的文字颜色*/
+.menuLayout .mainMenu .username{
+	color:#787A79;
+}
+/*"博客"菜单项的颜色*/
+.menuLayout .mainMenu .main,.menuLayout .mainMenu .main a{
+}
+/*博客"菜单项的背景图，及宽度、高度*/
+.menuLayout .mainMenu .main{
+	background:url(images/menu.png) 0px -80px;
+	width:74px;
+	height:24px;
+}
+/*菜单项之间的竖线*/
+.menuLayout .mainMenu .line{
+	background:url(images/menu.png) 0px -131px;
+}
+
+/*子菜单文字颜色*/
+.menuSub{
+	color:#074485;
+}
+/*子菜单之间竖线的颜色*/
+.menuSub .space{
+	color:#064183;
+}
+/*子菜单的链接文字颜色*/
+.menuSub a{
+	color:#074485;
+}
+
+/*---------------------------------menu-end--------------------------------------------*/
+
+
+/*----------------------------------一般组件样式-----------------------------------------*/
+/*各种宽度组件的Bar,Content,Bottom的背景*/
+.components210 .componentBar {
+	background:url(images/component.png);
+}
+.components210 .componentContent {
+	background:url(images/component.png) -780px 0px;
+}
+.components210 .componentBottom {
+	background:url(images/component.png) 0px -45px;
+}
+.components510 .componentBar {
+	background:url(images/component.png) 0px -67px;
+}
+.components510 .componentContent {
+	background:url(images/component.png) -1040px 0px;
+}
+.components510 .componentBottom {
+	background:url(images/component.png) 0px -112px;
+}
+.components730 .componentBar {
+	background:url(images/component.png) 0px -134px;
+}
+.components210 .componentTop,
+.components950 .components210 .componentTop{background:url(images/component.gif) repeat scroll 0 0;}
+.components210 .componentTop,
+.components950 .components210 .componentTop{background:url(images/component.png) repeat scroll 0 0;}
+.components730 .componentContent {
+	background:url(images/component.png) -1600px 0px;
+}
+.components730 .componentTop{
+	background:url(images/component.png) 0px -180px;
+}
+.components730 .componentBottom {
+	background:url(images/component.png) 0px -179px;
+}
+/*组件标题、评论标题的文字颜色颜色及链接文字颜色*/
+.componentBar ,.componentBar .title,.componentBar a,.commentBar,.commentBar a {
+	color:#3a3a3a;
+}
+/*组件标题(Bar)的高度*/
+.componentBar {
+	height:25px;
+	line-height:25px;
+}
+
+/*组件Bottom的高度*/
+.componentBottom{
+		height:2px;
+}
+
+
+/*列表类型组件前面的点*/
+.list div{
+	background:url(images/CP_j_dot.gif) no-repeat 3px 10px;
+}
+.componentContent .item li{
+	background:transparent url(images/CP_j_dot.gif) no-repeat scroll 0px 10px;
+}
+/*”组件中灰色链接文字链接色*/
+.componentContent .gray{
+	color:#585858;
+}
+/** ”博主信息组件“中积分部分边框颜色
+	”博主信息组件“中“博主等级”、“博主访问”、“博主积分”的值文字颜色*/
+#photo  .jifen{
+	border: 1px solid #d3e4ee;
+	color:#BC0203;
+	border-bottom:0px;
+}
+#photo  .end{
+	border-bottom: 1px solid #d3e4ee;
+}
+/*友情链接类型组件中 用户昵称的颜色*/
+.list div p{
+	color:#808080;
+}
+/*----------------------------------一般组件样式--end-------------------------------------*/
+
+
+/*----------------------------------prearticle---------------------------------------------*/
+
+/*首页“文章标题”，列表页“文章标题”点击后颜色*/
+.articleTitleno a:visited,.articleItemno a:visited{
+	color:#800080
+}
+
+/*"置顶"两字的颜色*/
+.prearticle .top{
+	color:#2D2B2C;
+}
+/*文章管理功能的字号颜色*/
+.articleTitle .manage{
+	font-size:12px;
+	color:#3d7800;
+}
+/*评论数，阅读数颜色*/
+.articleUtil .sub {
+	color:#074483;
+}
+/*文章底部操作按钮之间的竖线的颜色*/
+.prearticle .articleUtil .space{
+	color:#074483;
+}
+/*文章与文章之间虚线的颜色*/
+.prearticle .articleBottom{
+	border-top:1px dashed  #DBDFE2;
+}
+/*----------------------------------perarticle--end----------------------------------------*/
+
+/*----------------------------------article---------------------------------------------*/
+/*文章内容颜色*/
+.articleContent{
+	color:#2A2A2A;
+}
+
+/*文章标题下面的横线的颜色*/
+
+/*文章标题的颜色*/
+.article .articleTitle b{
+	color:#074483;
+}
+
+/*正文组件标题右侧 “大”、”中“、”小“ 显示下划线*/
+.articleFontSize a{
+	text-decoration:underline;
+}
+
+/*正文组件标题右侧文字颜色*/
+.articleFontSize .articleHot{
+	color:#3a3a3a;
+}
+/*文章内容下方，文章信息 文字颜色*/
+.articleInfo,.articleInfo a
+{
+	color:#868686;
+}
+/*文章内容下方”前一篇“、“后一篇”部分 文字颜色、上边框颜色*/
+.article .articleContext{
+	color:#58595B;
+	
+}
+/*文章标签默认颜色*/
+.articleTag{
+	color:#595959;
+}
+/*新浪广告计划边框颜色*/
+.sinaPlan{
+	border: 1px solid #d5d6d8;
+}
+/*----------------------------------article--end----------------------------------------*/
+
+/*----------------------------------comment---------------------------------------------*/
+/*评论和发表评论标题背景图、标题*/
+.comment .commentBar{	
+	background:url(images/component.png) 0px -201px;
+	height:25px;
+	line-height:25px;
+}
+
+
+/*评论内容之间的风格线颜色*/
+.comment .commentContent .citem{
+	border-top:1px dashed #E6E7E9; 
+}
+/*评论内容中发表评论用户头像外面的边框颜色*/
+.comment  .citem .userInfo .photo{
+	border:1px solid #DEDEDE;
+}
+
+
+/*发表评论评论区域文字颜色*/
+.comment .sendComment{
+	color:#676767;
+}
+/*发表评论评论区域“收听验证码“文字颜色*/
+.comment .sendComment .info a{
+	color:#676767;
+}
+/*发表评论评论区域输入框边框颜色*/
+.comment .sendComment .info input{
+	border:1px solid #CDCDCD;
+}
+/*发表评论评论区域评论输入框边框颜色*/
+.comment .sendComment .commentArea{
+	border:1px solid #ccc;
+}
+/*----------------------------------comment--end----------------------------------------*/
+
+/*----------------------------------articlelist---------------------------------------------*/
+/*文章列表也标题中各个选项卡之间的竖线颜色*/
+.componentBar .tabsplit{
+	color:#3a3a3a;
+}
+
+/*分页上方的横线颜色*/
+.componentContent .page{
+	border-top:1px dashed #CCC;
+}
+/*文章列表标题下方的下拉框下面的横虚线颜色*/
+.componentContent .articlelist .listtype{
+	border-bottom:1px dashed #CCC;
+}
+/*文章列表"编辑"、”删除“、“置顶文章”的文字颜色*/
+.prearticle .admin a{
+	color:#3a3a3a;
+}
+
+/*----------------------------------articlelist--end----------------------------------------*/
+
+/*-----------------------------------paging-------------------------------------------*/
+/*白色背景的分页*/
+.paging-line\.style-default\.label,
+.paging-line\.style-default\.link,
+.paging-line\.style-default\.current{
+	border: 1px solid #CCCCCC;
+	color:#646E7C;
+	background-color:#FFFFFF;
+}
+.paging-line\.style-default\.current{
+	color:#767676;
+	background-color:#FFF;
+}
+.paging-line\.style-default\.prv {
+	background: url(../../images/paging/prv_1.gif);
+}
+.paging-line\.style-default\.prv:hover {
+	background: url(../../images/paging/prv_1_over.gif);
+}
+.paging-line\.style-default\.next {
+	background: url(../../images/paging/next_1.gif);
+}
+.paging-line\.style-default\.next:hover {
+	background: url(../../images/paging/next_1_over.gif);
+}
+
+/*黑色背景的分页
+.paging-line\.style-default\.label,
+.paging-line\.style-default\.link,
+.paging-line\.style-default\.current{
+	border: 1px solid #393939;
+	color:#91969D;
+	background-color:#252525;
+}
+.paging-line\.style-default\.current{
+	color:#A4A4A4;
+	background-color:#FFF;
+}
+.paging-line\.style-default\.prv {
+	background: url(../../images/paging/prv_2.gif);
+}
+.paging-line\.style-default\.prv:hover {
+	background: url(../../images/paging/prv_2_over.gif);
+}
+.paging-line\.style-default\.next {
+	background: url(../../images/paging/next_2.gif);
+}
+.paging-line\.style-default\.next:hover {
+	background: url(../../images/paging/next_2_over.gif);
+}
+*/
+/*-----------------------------------paging-end------------------------------------------*/
+
+
+
+
+
+
+
+
+
+/* 950宽度标题栏 */
+.components950 .componentBar {
+	background:url(images/08component2.gif) left top;
+}
+/* 950宽度内容区域背景 */
+.components950 .componentContent {
+	background:url(images/08component2.gif) right 0;
+}
+.components950 .componentTop{}
+/* 950宽度底 */
+.components950 .componentBottom {background-image:url(images/08component2.gif);background-repeat:no-repeat;background-position:left -45px}
+
+/* 基本正文字色 */
+body {color:#333}
+/* 基本表单字色、边框 */
+textarea,input,option {color:#666;}/* 基本链接字色 */
+a,
+a:link,
+a:visited,
+a:hover {color:#074387}
+/* A类文字色 */
+.CP_txta{color:#333}
+/* B类文字色 */
+.CP_txtb{color:#666}
+/* C类文字色 */
+.CP_txtc{color:#999}
+/* A类链接色 */
+.CP_linka a:link,
+.CP_linka a:visited,
+a:link.CP_linka,
+a:visited.CP_linka{color:#074387}
+/* B类链接色，需要跟B类文字色相同 */
+.CP_linkb a:link,
+.CP_linkb a:visited,
+a:link.CP_linkb,
+a:visited.CP_linkb{color:#666}
+/* 图片边框 */
+.CP_brd {border-color:#dcdcdc}
+/* 空白图标 */
+.CP_i_blank {background-image:url(../../common/images/icon15/CP_i_blank.gif)}
+
+/* 功能性链接 */
+.CP_a_fuc:link,
+.CP_a_fuc:visited,
+.CP_a_fuc:hover {color:#074387}
+/* 评论标题的功能性链接 */
+.CP_cmttl .CP_a_fuc,
+.CP_cmttl .CP_a_fuc:link,.CP_cmttl .CP_a_fuc:visited {color:#074387}
+.CP_cmttl .CP_a_fuc:hover,
+.CP_cmttl .CP_a_fuc:hover cite {color:#074387}
+/* 基本按钮 */
+.CP_a_btn:link,.CP_a_btn:visited,.CP_a_btn:active {color:#074387}
+/* 触发（取消） */
+.NOCP_a_btn:hover cite {color:#074387}
+/* 评论条样式 */
+.CP_cmttl {border:1px solid #e0e0e0;background:#f0f0f0}
+
+/* 翻页 */
+.CP_pages a:link,
+.CP_pages a:visited,
+.CP_pages a:hover {color:#074387}
+.CP_pages a {border-color:#ccc;background-color:#fff}
+	/* 省略号 */
+.CP_pgelip {color:#074387}
+	/* 翻页左侧文字 */
+.CP_pgttl {color:#999}	/* 上下页 */
+.CP_pgprev a,
+.CP_pgprev a:link,
+.CP_pgprev a:visited,
+.CP_pgprev a:hover,
+.CP_pgnext a,
+.CP_pgnext a:link,
+.CP_pgnext a:visited,
+.CP_pgnext a:hover {color:#074387}
+
+/* 翻页_缩减版_分隔线 */
+.CP_pgsimp {color:#ccc}
+
+/* 页签_跟随皮肤 默认950宽 */
+.CP_tagskn,
+.CP_tagskns .CP_tgsknr,
+.CP_tagskns .CP_tagon {background-image:url(images/08component2.gif)}
+/* 默认状态，此颜色跟标题栏颜色保持一致 */
+.CP_tagskns  .CP_tgskn em, .CP_tagskns .CP_tgskn em a:link, .CP_tagskns .CP_tgskn em a:visited{color:#333}
+/* 默认状态，此颜色跟默认文字色保持一致 */
+.CP_tagskns  .CP_tagon .CP_tgskn em, .CP_tagskns  .CP_tagon .CP_tgskn em a:link, .CP_tagskns  .CP_tagon .CP_tgskn em a:visited{color:#333}
+/* 730宽度 */
+.components730 .CP_tagskn,
+.components730 .CP_tagskns .CP_tgsknr {background-image:url(images/component.png)}
+
+
+
+
+
+/* 导航 */
+/*头图区域容器 */
+.headpic100,
+.headpic950,
+.ntoptitle{height:253px}
+/* 标题位置 */
+.ntoptitle .ntopns{top:50%; margin-top:-45px; left: 70px;}
+/* 标题颜色 */
+.ntoptitle .ntitname,
+.ntoptitle .ntitname a:link,
+.ntoptitle .ntitname a:visited,
+.ntoptitle .ntitname a:hover,
+.ntoptitle .ntitname a:link.CP_a_fuc,
+.ntoptitle .ntitsite,
+.ntoptitle .ntitsite a:link,
+.ntoptitle .ntitsite a:visited,
+.ntoptitle .ntitsite a:hover{color:#fff}
+/* 导航背景，一般用于100%平铺 */
+.termenubg{background-image:url(images/08menubg.gif)}
+/* 导航背景，1024范围内的背景叠加 */
+.termenu{background-image:url(images/08menubg100.jpg);background-repeat:no-repeat;background-position:bottom}
+/* 导航背景，预留容器 */
+.termenuc{height:70px}
+/* 个人图片 */
+.termenutag .userhead img{background-color:white;border:solid 1px #d1d4e2}
+.termenutag .username,
+.termenutag .username a:link,
+.termenutag .username a:visited{color:#292c19}
+/* 一级导航 */
+.promenu{background-image:url(images/08menutag.png);height:34px}
+.promenu li{background-image:url(images/08menutag.png);height:34px}
+.promenu li a,
+.promenu li a:link,
+.promenu li a:visited,
+.promenu li a:hover
+{color:#074387}
+.promenu li span{color:#074387;font-size:14px;background-image:url(images/08menutag.png)}
+.promenu li.on{background-image:url(images/08menutag.png)}
+.promenu li.on span{color:#4b4b4b;background-image:url(images/08menutag.png)}
+.promenu li.on a,
+.promenu li.on a:link,
+.promenu li.on a:visited,
+.promenu li.on a:hover{color: #4b4b4b;}
+/* 一级导航有半透明效果时，针对IE6做的补充 */
+.promenu,
+.promenu li,
+.promenu li span,
+.promenu li.on,
+.promenu li.on span{_background-image:url(images/08menutag.gif)}
+/* 二级导航当前颜色 */
+.termenutxt  .floatLeft span,
+.termenutxt .tmtcen .floatLeft strong a:link,
+.termenutxt .tmtcen .floatLeft strong a:visited,
+.termenutxt .tmtcen .floatLeft strong a:hover{color:#010101}
+/* 二级导航链接颜色 */
+.termenutxt  .floatLeft span a:link,.termenutxt  .floatLeft span a:visited{color:#5c82af}
+/* 二级导航分割线颜色 */
+.termenutxt  .floatLeft .linesp{background-color:#95BCE7}
+
+/* 二级导航右侧设置链接颜色 */
+.termenutxt  .floatRight span{color:#5c82af}
+
+.tmtcen .CP_a_fuc,
+.tmtcen .CP_a_fuc:link,
+.tmtcen .CP_a_fuc:visited,
+.tmtcen .CP_a_fuc:hover {color:#5c82af;text-decoration:none}
+/* 标题栏右侧功能链接，颜色需要跟标题颜色一致，新增1.1评论条 */
+.componentBar .manage a:link,
+.componentBar .manage a:visited,
+.componentBar .title a:link,
+.componentBar .title a:visited,
+.CP_cmtt_d,
+.CP_cmtt_d .floatLeft,
+.CP_cmtt_d .floatLeft a:link,
+.CP_cmtt_d .floatLeft a:visited,
+.CP_cmtt_d .floatLeft a:hover,
+.CP_cmtt_d a.CP_a_fuc,
+.CP_cmtt_d a.CP_a_fuc:link, 
+.CP_cmtt_d a.CP_a_fuc:visited,
+.CP_cmtt_d a.CP_a_fuc:hover,
+.CP_cmtt_d a.CP_a_fuc:hover cite{color:#333;text-decoration:none}
+/* 评论标题背景 */
+.CP_cmtpost .CP_cmtt_d{ background-image: url(images/cmtpost.gif);}
+.componentBar .title a:hover,.CP_cmtt_d .floatLeft a:hover,.CP_cmtt_d a.CP_a_fuc:hover cite{text-decoration:underline}
+
+
+
+
+/*08平台1.1皮肤新增样式
+-----------------------------------
+--liubin1@staff.sina.com.cn----
+-----------------------------------
+-----------------------------------
+-----------------------------------
+*/
+/* 右侧标题无背景样式 */
+.components210 .componentBar2 {background: url(images/component.png) -780px 0;}
+.components730 .componentBar2{background: url(images/component.png) -1600px 0;}
+.components950 .componentBar2{background: url(images/08component2.gif) 950px 0;}
+.components950 .componentTop{background:url(images/08component2.gif) 0 0;}
+
+/* 导航页签 */
+.SG_navi .SG_naviu,
+.SG_navi li,
+.SG_navi div{ background-image: url(images/componentnavi.png);}
+.SG_navi .SG_naviu{ background-position:0 24px; background-repeat:repeat-x;}
+.SG_navi .alt{ background-color:#000000; background-image: url(images/08component2.gif); background-position:right top;}
+.SG_navi .alt div{ background-position:0 0; background-repeat:no-repeat;  background-image: url(images/08component2.gif);}
+.SG_navi .onThis{ background-position:0 0;background-repeat:no-repeat;}
+.SG_navi .onThis div{ background-position:right 0;background-repeat:no-repeat; color:#333;}
+.SG_navi .alt a:link,
+.SG_navi .alt a:visited,
+.SG_navi .alt a:hover{ color:#3a3a3a;}
+.SG_navi .SG_navi_Adds { margin-left:6px; float:left; display:inline}
+
+/* 左侧列表 */
+.CP_j_sideList li em,
+.CP_j_sideList li a,
+.CP_j_sideList li strong{ float:left; color:#074387;}
+.CP_j_sideList li em{ background:url(images/CP_j_dot.gif) no-repeat left 11px;}/* 默认icon图 */
+.CP_j_sideList li.cur { background:#074387; color:#fff;}/* 选中状态的背景颜色；选中状态的数字颜色 */
+.CP_j_sideList li.cur a:link,
+.CP_j_sideList li.cur a:visited,
+.CP_j_sideList li.cur a:active,
+.CP_j_sideList li.cur a:hover{ color:#fff;text-decoration:none}/* 选中状态的链接颜色 */
+.CP_j_sideList li.cur em{ background:url(images/CP_j_white_dot.gif) no-repeat left 11px; }/* 选中状态的icon图 */
+
+/* 左侧列表-博客*/
+.CP_j_sideList_bk li a,
+.CP_j_sideList_bk li strong{ color:#074387;}
+.CP_j_sideList_bk li em{ background:url(images/CP_j_dot.gif) no-repeat left 11px;}/* 默认icon图 */
+.CP_j_sideList_bk li.cur { background:#074387; color:#fff;}/* 选中状态的背景颜色；选中状态的数字颜色 */
+.CP_j_sideList_bk li.cur a:link,
+.CP_j_sideList_bk li.cur a:visited,
+.CP_j_sideList_bk li.cur a:active,
+.CP_j_sideList_bk li.cur a:hover{ color:#fff;text-decoration:none}/* 选中状态的链接颜色 */
+.CP_j_sideList_bk li.cur em{ background:url(images/CP_j_white_dot.gif) no-repeat left 8px; }/* 选中状态的icon图 */
+
+/* 实线虚线 */
+.CP_j_line{ height:1px;  overflow:hidden; background:url(images/CP_j_line.gif) repeat-x;clear:both; }
+.CP_j_linedot{ height:1px; overflow:hidden; background:url(images/CP_j_linedot.gif) repeat-x; clear:both;}
+.CP_j_line1{ background-image: url(images/CP_j_line.gif); background-repeat: repeat-x; }
+.CP_j_linedot1{ background-image: url(images/CP_j_linedot.gif); background-repeat: repeat-x; }
+.articleTitle_d {background-image: url(images/CP_j_dot.gif); }
+.CP_cmtli .CP_pf_nm{background-image: url(images/CP_j_dot.gif); }
+
+/* 相册左侧列表*/
+/* 左侧列表选中背景色 */
+.imgbrown,.imgbrown td {background:#074387;}
+/* 左侧列表标题颜色 */
+.TxtLimt100 {
+	color:#074387;
+}
+/* 左侧列表选中状态下选中字体颜色 */
+.imgbrown p, .imgbrown em {
+	color:#ffffff;
+}
+.imgbrown p a:link, .imgbrown p a:visited, .imgbrown p a:hover, .imgbrown p a:active {
+	color:#ffffff;
+}
+
+
+/* 强制纠正短线颜色 */
+.prearticle .articleUtil .space,
+.articleUtil .space {color:#cccccc;}
+
+/* 专辑右侧列表标题颜色 */
+.TxtLimt200 {
+	color:#074387;
+}

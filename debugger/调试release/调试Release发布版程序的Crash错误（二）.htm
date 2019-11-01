@@ -1,0 +1,400 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0087)http://blog.sina.com.cn/s/blog_48f93b530100fv7y.html~type=v5_one&label=rela_nextarticle -->
+<HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<META http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
+<META name="description" content="可下人间的BLOG,可下人间,上篇给出的方案一还要补充几句。通过&ldquo;crash地址+MAP文件&rdquo;来定位出错代码位置虽然需要经过比较复杂的地址计算，但却是最简单实现的方式。如果仅仅想通过崩溃地址定位出错的函数，就更加方便了。我在网上找到一个解析MAP文件的小工具，可以非常清晰的列出每个函数的地址，并且可以将分析表格导出为Excel文件。工具下载地址：http://e.ys168.com/?tinyfun，工具目录下VCMapper.exe。另外上篇主要参考两篇文章：http://www.vckbase.c">
+<META name="keywords" content="可下人间的BLOG,可下人间,调试,release,crash,it">
+<TITLE>调试Release发布版程序的Crash错误（二）_可下人间_新浪博客</TITLE>
+<SCRIPT>
+var scope = {
+	$uid : "1224293203",
+	$PRODUCT_NAME : "blog",
+	$pageid : "article",
+	$key :  "99a8649f0d528f9819d76b337a283d18",
+	$sort_id : "113",
+    $loadconf : true,
+	$flag2008 : "0",
+	$articleid : "48f93b530100fv7y" ,
+	$isCommentAllow : "1",
+	$album_pic:"48f93b53g79bbc36cd95f"
+};
+var	$encrypt_code = "af746aef536707c30978139f550cb990";
+var config = {"common":{"t":"5_3","r":0,"head":[],"bg":[],"pageset":0,"invitationset":0},"private":{"cms":0,"blogsize":"0","ad":0,"sms":0,"adver":0,"hidecms":0,"tj":0,"p4p":0,"spamcms":0,"topblogid":0},"component":{"c1":[901,3,1,2,1001,12,17],"c2":[],"x":2},"product":{"c":1,"j":1}};
+var fav = {"48f93b530100fv7y":"b104fd7b953876b299d1774c9e683cd4"} ;
+var article_hidecms = 0 ;
+</SCRIPT>
+
+<STYLE>.MASS87f1b6961108{display:none}</STYLE>
+<SCRIPT type="text/javascript" src="./调试Release发布版程序的Crash错误（二）_files/boot.js"></SCRIPT><SCRIPT type="text/javascript" charset="UTF-8" src="./调试Release发布版程序的Crash错误（二）_files/cardtips.js"></SCRIPT><SCRIPT id="" src="./调试Release发布版程序的Crash错误（二）_files/combine" charset="utf-8"></SCRIPT><SCRIPT id="" src="./调试Release发布版程序的Crash错误（二）_files/config.js" charset="UTF-8"></SCRIPT>
+<SCRIPT type="text/javascript">loadCss();</SCRIPT><LINK id="" rel="stylesheet" type="text/css" href="./调试Release发布版程序的Crash错误（二）_files/default.css"><LINK id="" rel="stylesheet" type="text/css" href="./调试Release发布版程序的Crash错误（二）_files/blog.css"><LINK id="themeLink" rel="stylesheet" type="text/css" href="./调试Release发布版程序的Crash错误（二）_files/t.css">
+<SCRIPT src="./调试Release发布版程序的Crash错误（二）_files/platform_tray.compressed.js"></SCRIPT>
+
+<LINK href="./调试Release发布版程序的Crash错误（二）_files/im.css" type="text/css" rel="stylesheet">
+
+<!--# block name="blk737369" --><!--# endblock -->
+<!--#include file="/hits?act=4&aid=${aid}" stub="blk737369" --> 
+<SCRIPT src="./调试Release发布版程序的Crash错误（二）_files/Query.php" charset="utf-8"></SCRIPT><SCRIPT src="./调试Release发布版程序的Crash错误（二）_files/hits" charset="utf-8"></SCRIPT><SCRIPT src="./调试Release发布版程序的Crash错误（二）_files/uic" charset="utf-8"></SCRIPT><SCRIPT src="./调试Release发布版程序的Crash错误（二）_files/listhtml.php" charset="utf-8"></SCRIPT><SCRIPT src="./调试Release发布版程序的Crash错误（二）_files/get_prevnext_article.php" charset="utf-8"></SCRIPT></HEAD><BODY>
+<DIV id="sinatopbar">
+<SCRIPT type="text/javascript">
+<!--
+	document.write(SinaSysTray.getHTML());
+//-->
+</SCRIPT><DIV class="sinatopbar" id="login_bar_463">  <DIV class="stb">		<!--产品Logo-->     <DIV class="logo" title="返回新浪博客首页"><A id="login_bar_logo_link_463" href="http://blog.sina.com.cn/" target="_blank" class="logoPic lp_blog"></A></DIV>       <DIV class="stbcen">       <!--运营导航-->       <DIV class="st_Jh_vblog_nologin">			<SPAN class="v1" id="login_yunying_span_463"><A href="http://blog.sina.com.cn/" id="login_operation_first_btn_463" target="_blank">博客首页</A></SPAN>           <SPAN class="Mb_line"></SPAN>           <SPAN class="v2" id="login_bar_operation_span_463"><A href="http://blog.sina.com.cn/lm/rank/index.html" id="login_operation_second_btn_463" target="_blank">排行榜</A></SPAN>			<SPAN class="v2" style="display:none;" id="login_bar_video_btn_463"><A href="javascript:;" id="login_bar_video_463"><STRONG>点播单</STRONG><EM>(0)</EM></A><INPUT type="hidden" id="video_number_463" value="0"></SPAN>           <SPAN class="vAd" id="login_ad_content_463"><A style="color: red;" href="http://t.sina.com.cn/" target="_blank">欢迎使用最酷最火沟通工具-新浪微博</A></SPAN>       </DIV>		<!--登陆按钮-->       <DIV class="stblog">               <SPAN class="stblog1"><INPUT type="button" value="登录" id="login_login_btn_463" style="cursor: pointer"></SPAN>               <SPAN class="stbline_j"></SPAN>               <SPAN class="stblog2"><A href="http://login.sina.com.cn/hd/reg.php?entry=blog" id="login_reg_btn_463" target="_blank">注册</A></SPAN>       </DIV>       </DIV>		<DIV class="t_help">          <SPAN class="stb_sosline"></SPAN>          <SPAN class="helplink">				<A id="login_help_link_463" href="http://blog.sina.com.cn/lm/help/2009/index.html" target="_blank">帮助</A>			</SPAN>		</DIV>		<!--搜索区域-->       <DIV class="stbsea"><FORM id="login_bar_search_form_463" method="get" target="_blank" action="http://uni.sina.com.cn/c.php"><DIV style="overflow:hidden">            <INPUT name="ie" value="utf-8" type="hidden"><INPUT name="e" value="utf8" type="hidden" style="width:0px;"><INPUT name="k" value="" type="hidden" id="login_bar_search_hide_k_463" style="width:0px;"><INPUT name="ts" value="" type="hidden" id="login_bar_search_hide_ts_463" style="width:0px;"><INPUT name="key" value="" type="hidden" id="login_bar_search_hide_key_463">            <INPUT name="keyword" value="" type="hidden" style="width:0px;" id="login_bar_search_hide_key_word_463"><INPUT name="t" value="blog" type="hidden" id="login_bar_search_hide_t_463" style="width:0px;"></DIV><DIV class="sts1" style="background:url(http://simg.sinajs.cn/common/images/sinatopbar/090315_bg2.gif) no-repeat; background-position:2px 0px;*background-position:2px 2px; width:117px; padding:0px 0px 0px 4px; height:24px;"><INPUT type="text" class="stinp1" style="background:none transparent; height:18px; padding:2px 0px 2px 2px; width:109px;" id="login_bar_search_input_463"></DIV><DIV class="sts2"><DIV class="anainp" id="login_bar_search_menu_label_463">博文</DIV><DIV class="arrow" id="login_bar_search_menu_arrow_463"></DIV></DIV><DIV class="sts3"><INPUT class="suba" type="submit" value="搜索"></DIV></FORM></DIV>   </DIV><DIV class="layerBox layerBox_Md_1" id="search_menu_463" style="position: absolute; z-index: 1000; display: none; ">	<UL class="layerIn_No_1">		<LI class="bottomline"><A href="javascript:;" b_value="space" style="text-decoration:none;">综合&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</A></LI>		<LI><A href="javascript:;" b_value="blog" style="text-decoration:none;">博文&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</A></LI>		<LI><A href="javascript:;" b_value="bauthor" style="text-decoration:none;">博主&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</A></LI>		<LI><A href="javascript:;" b_value="photo" style="text-decoration:none;">图片&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</A></LI>		<LI><A href="javascript:;" b_value="music" style="text-decoration:none;">音乐&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</A></LI>		<LI><A href="javascript:;" b_value="vblog" style="text-decoration:none;">视频&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</A></LI>		<LI class="bottomline"><A href="javascript:;" b_value="vauthor" style="text-decoration:none;">播主&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</A></LI>		<LI><A href="javascript:;" b_value="tiezi" style="text-decoration:none;">论坛&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</A></LI>		<LI><A href="javascript:;" b_value="bar" style="text-decoration:none;">新浪吧&nbsp;&nbsp;&nbsp;</A></LI>		<LI><A href="javascript:;" b_value="quanzi" style="text-decoration:none;">圈子&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</A></LI>	</UL></DIV></DIV>
+</DIV>
+<SCRIPT type="text/javascript">
+<!--
+	SinaSysTray.base_init({
+		"type" : scope.$PRODUCT_NAME || "",
+		"uid" : $UID || "0"
+	});
+//-->
+</SCRIPT>
+<DIV class="wrapper">
+  <DIV class="headpic100" id="headpic100">
+<DIV class="headpic950" id="headPic950">
+<DIV class="toppicflash" id="toppicflash">
+</DIV>
+  <DIV class="ntoptitle" id="ntoptitle"> 
+  <DIV class="ntopns" id="blogTitle">
+  <DIV class="ntitname" id="blogname"><A href="http://blog.sina.com.cn/kexiarenjian">可下人间的BLOG</A>
+   </DIV>
+   <DIV class="ntitsite">http://blog.sina.com.cn/kexiarenjian<A id="SubscribeNewRss" href="http://blog.sina.com.cn/s/blog_48f93b530100fv7y.html~type=v5_one&label=rela_nextarticle#" class="CP_a_fuc" onclick="return false;">[<CITE>订阅</CITE>]</A></DIV> 
+  </DIV>
+  </DIV>
+
+</DIV>
+<DIV class="termenubg"></DIV>
+  <DIV class="termenu">
+  <DIV class="termenuc" id="clone_template">
+    <DIV class="termenutag">
+     <DIV class="user">
+     <DIV class="userhead"><A href="http://blog.sina.com.cn/kexiarenjian"><IMG src="./调试Release发布版程序的Crash错误（二）_files/50" title="返回可下人间的博客个人首页" alt="返回可下人间的博客个人首页"></A></DIV><DIV class="username"><A style="cursor:hand;" href="http://blog.sina.com.cn/kexiarenjian"><SPAN id="nav_name">可下人间</SPAN></A></DIV>
+     </DIV>
+	 
+     <DIV class="promenu">
+     <LI class="on"><SPAN id="nav_blog"><A href="http://blog.sina.com.cn/kexiarenjian">博客</A></SPAN></LI>     
+     <LI><SPAN id="nav_photo"><A href="http://photo.blog.sina.com.cn/kexiarenjian">相册</A></SPAN></LI>
+     <LI><SPAN id="nav_music"><A href="http://music.sina.com.cn/m/1224293203">音乐</A></SPAN></LI>
+     <LI><SPAN id="nav_vblog"><A href="http://you.video.sina.com.cn/kexiarenjian">播客</A></SPAN></LI>
+	 <LI><SPAN id="nav_tiezi"><A href="http://profile.blog.sina.com.cn/kexiarenjian">个人中心</A></SPAN></LI>
+	 <!--   <li><span id="nav_quanzi"><a href="http://q.sina.com.cn/m/kexiarenjian">圈子</a></span></li>-->
+	 
+     </DIV>
+    </DIV>
+    <DIV class="termenutxt">
+    <DIV class="tmtcen">
+        <DIV class="floatLeft">
+        <SPAN><A href="http://blog.sina.com.cn/kexiarenjian">首页</A></SPAN><SPAN class="linesp"></SPAN><SPAN><A href="http://blog.sina.com.cn/s/articlelist_1224293203_0_1.html">博文</A></SPAN><SPAN class="linesp"></SPAN><SPAN><A href="http://blog.sina.com.cn/s/favourites_1224293203_1.html">收藏</A></SPAN><SPAN class="linesp"></SPAN><SPAN><A href="http://profile.blog.sina.com.cn/circle.php?uid=1224293203&page=1&type=3">博客圈</A></SPAN><!--<span >  <a href="http://blog.sina.com.cn/lm/rank/index.html" target="_blank">排行榜</a></span>--></DIV>
+        <DIV class="floatRight">
+        
+        </DIV>
+    </DIV>
+    </DIV>
+  </DIV>
+  </DIV>
+</DIV>
+  <DIV class="contentLayout">
+    
+      <DIV class="column_2 floatLeft">
+<DIV id="advertise_top" class="components730 SinaAd_hide"></DIV>
+<DIV class="components730">
+        <DIV class="component">
+          <DIV class="componentBar">
+                <SPAN class="floatRight articleFontSize" id="articleFontManage">字体大小：<A onclick="changeFontSize(2);return false;" href="">大</A><B>中</B><A onclick="changeFontSize(0);return false;" href="">小</A></SPAN>
+                <SPAN class="title">正文</SPAN>
+                
+            </DIV>
+<DIV class="componentContent article"><DIV class="comconblog"> 
+<DIV class="articleTitle">
+<DIV style="display: inline;">
+<B id="t_48f93b530100fv7y">调试Release发布版程序的Crash错误（二）</B><SPAN class="time">(2009-12-02 16:37:25)</SPAN></DIV></DIV>
+<DIV class="articleTag">
+<TABLE width="100%" border="0" cellspacing="0" cellpadding="0">
+<TBODY><TR>
+<TD>
+<SCRIPT>
+var $tag='调试,release,crash,it';
+var $tag_code='9a383ef6e8eeb5f1442abfa68ee6fd5f';
+</SCRIPT>
+标签：<A href="http://uni.sina.com.cn/c.php?t=blog&k=%B5%F7%CA%D4&ts=bpost&stype=tag" class="tag" target="_blank">调试</A><WBR>&nbsp;<A href="http://uni.sina.com.cn/c.php?t=blog&k=release&ts=bpost&stype=tag" class="tag" target="_blank">release</A><WBR>&nbsp;<A href="http://uni.sina.com.cn/c.php?t=blog&k=crash&ts=bpost&stype=tag" class="tag" target="_blank">crash</A><WBR>&nbsp;<A href="http://uni.sina.com.cn/c.php?t=blog&k=it&ts=bpost&stype=tag" class="tag" target="_blank">it</A><WBR>&nbsp;
+</TD>
+<TD width="250" align="right" valign="top">分类：<A href="http://blog.sina.com.cn/s/articlelist_1224293203_3_1.html">工作•开发</A></TD>
+</TR></TBODY>
+</TABLE>
+</DIV>
+<DIV class="articleContent" id="articleBody">
+<P>&nbsp;<WBR>&nbsp;<WBR>&nbsp;<WBR>
+上篇给出的方案一还要补充几句。通过“crash地址 +
+MAP文件”来定位出错代码位置虽然需要经过比较复杂的地址计算，但却是最简单实现的方式。如果仅仅想通过崩溃地址定位出错的函数，就更加方便了。我在网上找到一个解析MAP文件的小工具，可以非常清晰的列出每个函数的地址，并且可以将分析表格导出为Excel文件。工具下载地址：<A href="http://e.ys168.com/?tinyfun">http://e.ys168.com/?tinyfun</A>，工具目录下VCMapper.exe。</P>
+<P>&nbsp;<WBR>&nbsp;<WBR>&nbsp;<WBR>
+另外上篇主要参考两篇文章：</P>
+<P>&nbsp;<WBR>&nbsp;<WBR>&nbsp;<WBR> <A href="http://www.vckbase.com/document/viewdoc/?id=908">http://www.vckbase.com/document/viewdoc/?id=908</A></P>
+<P>&nbsp;<WBR>&nbsp;<WBR>&nbsp;<WBR> <A href="http://www.vckbase.com/document/viewdoc/?id=1473">http://www.vckbase.com/document/viewdoc/?id=1473</A></P>
+<P>&nbsp;<WBR></P>
+<P>&nbsp;<WBR>&nbsp;<WBR>&nbsp;<WBR>
+<FONT color="#CC0000"><STRONG>方案二：崩溃地址 + MAP文件 +
+COD文件</STRONG></FONT></P>
+<P>&nbsp;<WBR>&nbsp;<WBR>&nbsp;<WBR>
+由于VC8以后的版本都不再支持MAP文件中产生代码行信息，因此我们寻找另一种定位方式：COD文件。</P>
+<P>&nbsp;<WBR>&nbsp;<WBR>&nbsp;<WBR>
+<STRONG>1、COD文件</STRONG></P>
+<P>&nbsp;<WBR>&nbsp;<WBR>&nbsp;<WBR>
+COD文件是一个包含了汇编码、二进制机器码和源代码对应信息的文件，每一个cpp都对应一个COD文件。通过这个文件，我们可以非常方便地进行定位。</P>
+<P>&nbsp;<WBR>&nbsp;<WBR>&nbsp;<WBR>
+在VC6中生成COD文件的设置方式为：Project Settings -&gt; C/C++，在
+Category 中选 Listing Files，在 Listing file type 组合框中选
+Assembly，Machine code，and source。在VC8中生成COD文件的设置方式为：Project
+Properties -&gt; C/C++ -&gt; Output Files
+-&gt; Assembler Output 项，选择 Assembly，Machine code，and
+Source(/Facs)。</P>
+<P>&nbsp;<WBR>&nbsp;<WBR>&nbsp;<WBR></P>
+<P>&nbsp;<WBR>&nbsp;<WBR>&nbsp;<WBR>
+<STRONG>2、定位崩溃行</STRONG></P>
+<P>&nbsp;<WBR>&nbsp;<WBR>&nbsp;<WBR>
+下面通过举例进行说明。现在我有一个基于对话框的MFC应用程序CrashTest，在CCrashTestDlg::OnInitDialog函数中写入导致crash的代码语句（第99行），源文件如下：</P>
+<P>&nbsp;<WBR>&nbsp;<WBR>&nbsp;<WBR> <A href="http://photo.blog.sina.com.cn/showpic.html#blogid=48f93b530100fv7y&url=http://static16.photo.sina.com.cn/orignal/48f93b53g79bbc36cd95f&690" target="_blank"><IMG style="MAx-WiDTH: 500px" src="./调试Release发布版程序的Crash错误（二）_files/48f93b53g79bbc36cd95f&690">
+</A></P>
+<P>&nbsp;<WBR>&nbsp;<WBR>&nbsp;<WBR>
+根据崩溃地址（0x004012A3）以及MAP文件（定位片段图片如下），定位crash函数为OnInitDialog；并且我们可以很容易地计算出崩溃地址相对于崩溃函数的偏移量为
+0x004012A3 - 0x004011E0 = 0xC3。</P>
+<P>&nbsp;<WBR>&nbsp;<WBR>&nbsp;<WBR> <A href="http://photo.blog.sina.com.cn/showpic.html#blogid=48f93b530100fv7y&url=http://static11.photo.sina.com.cn/orignal/48f93b53g79bbc5f052da&690" target="_blank"><IMG style="MAx-WiDTH: 500px" src="./调试Release发布版程序的Crash错误（二）_files/48f93b53g79bbc5f052da&690">
+</A></P>
+<P>&nbsp;<WBR>&nbsp;<WBR>&nbsp;<WBR>
+再来看看CrashTestDlg.cod文件，我们根据文件中源码信息找到OnInitDialog函数信息片段：</P>
+<P>&nbsp;<WBR>&nbsp;<WBR>&nbsp;<WBR> <A href="http://photo.blog.sina.com.cn/showpic.html#blogid=48f93b530100fv7y&url=http://static4.photo.sina.com.cn/orignal/48f93b53g79bc3c02d3f3&690" target="_blank"><IMG style="MAx-WiDTH: 500px" src="./调试Release发布版程序的Crash错误（二）_files/48f93b53g79bc3c02d3f3&690">
+</A></P>
+<P>&nbsp;<WBR>&nbsp;<WBR>&nbsp;<WBR>
+可以看到图片中第一行为OnInitDialog函数汇编代码的起始行；找到“int * p =
+NULL;”这一句源码，其前面的98表示这行代码在源文件中的行号，下面的000c1表示相对于函数开始位置的偏移量，后面的“33
+c0”为机器码，“xor eax，eax”为汇编码。那么我们根据前面算出来的偏移量0xC3，找到对应出错的语句为99行：“*p =
+5;”。</P>
+<P>&nbsp;<WBR>&nbsp;<WBR>&nbsp;<WBR>
+总结一下定位步骤：</P>
+<P>&nbsp;<WBR>&nbsp;<WBR>&nbsp;<WBR> 1) 根据公式
+<STRONG>崩溃语句在函数中偏移地址 = 崩溃地址 - 崩溃函数地址</STRONG> 计算出偏移量X；</P>
+<P>&nbsp;<WBR>&nbsp;<WBR>&nbsp;<WBR> 2) 根据公式
+<STRONG>崩溃语句在COD文件中地址 = 崩溃函数在COD文件中地址 +&nbsp;<WBR>X</STRONG>
+计算出地址Y。其中崩溃函数在COD文件中地址为COD文件中函数起始括号“{”后面表明的地址，一般情况下为0x0000；</P>
+<P>&nbsp;<WBR>&nbsp;<WBR>&nbsp;<WBR> 3)
+根据Y在COD文件中找到对应代码行。</P>
+<P>&nbsp;<WBR>&nbsp;<WBR>&nbsp;<WBR></P>
+<P>&nbsp;<WBR>&nbsp;<WBR>&nbsp;<WBR>
+ok，方案二介绍完了。这种方法最大的好处是没有VC开发环境版本限制，而且COD文件里面包含的信息更加丰富，不但可以帮助我们定位crash，还能帮我们分析很多东西。当然，这也导致编译生成了很多信息文件。</P>
+<P>&nbsp;<WBR></P>
+ </DIV>
+<!--   -->
+			<DIV class="toMiniblog">
+				<DIV class="toMiniblog_link">
+					<A id="shareminiblogfromblogatarticlepage" href="http://blog.sina.com.cn/s/blog_48f93b530100fv7y.html~type=v5_one&label=rela_nextarticle#">分享到新浪微博</A>
+				</DIV>
+			</DIV>
+<DIV class="articleInfo floatLeft">						
+已投稿到：
+
+<!--（<a href="http://my2008.sina.com.cn/blog/rule.html" target="_blank">规则</a>）<span class="space12"></span>（<a href="#" onclick="return false;"><span onclick="showMyRecord();">积分</span></a>）
+<span class="space12"></span>//-->
+<SPAN class="sort"><A href="http://blog.sina.com.cn/lm/114/113/day.html" target="_blank">排行榜</A></SPAN>
+
+<SPAN class="group"><A href="http://q.sina.com.cn/blog_groups.php?fid=48f93b530100fv7y" target="_blank">圈子</A></SPAN>
+                 
+</DIV>
+<DIV class="articleUtil floatRight"> 
+<A>阅读</A><SPAN id="r_48f93b530100fv7y" class="sub">(17)</SPAN><SPAN class="space">|</SPAN><A href="http://blog.sina.com.cn/s/blog_48f93b530100fv7y.html~type=v5_one&label=rela_nextarticle#comment">评论</A><SPAN id="c_48f93b530100fv7y" class="sub">(0)</SPAN><SPAN class="space">|</SPAN><A id="f_48f93b530100fv7y" href="http://blog.sina.com.cn/s/blog_48f93b530100fv7y.html~type=v5_one&label=rela_nextarticle#" onclick="$articleManage(&#39;48f93b530100fv7y&#39;,5);return false;">收藏</A><SPAN id="fn_48f93b530100fv7y" class="sub">(0)</SPAN><SPAN class="space">|</SPAN><A href="http://blog.sina.com.cn/main_v5/ria/print.html?blog_id=blog_48f93b530100fv7y" target="_blank">打印</A><SPAN class="space">|</SPAN><A id="q_48f93b530100fv7y" onclick="$jubao(&#39;48f93b530100fv7y&#39;)" href="javascript:;">举报</A>
+</DIV>
+<DIV class="CP_j_linedot"></DIV>
+<!--<div class="articleContext">{*$prev*}{*$next*}</div>-->
+<DIV class="articleContext" id="nextprev_48f93b530100fv7y">前一篇：<SPAN class="space6"></SPAN><A href="http://blog.sina.com.cn/s/blog_48f93b530100fsln.html~type=v5_one&label=rela_prevarticle">调试Release发布版程序的Crash错误（一）</A><BR>后一篇：<SPAN class="space6"></SPAN><A href="http://blog.sina.com.cn/s/blog_48f93b530100fxvm.html~type=v5_one&label=rela_nextarticle">调试Release发布版程序的Crash错误（三）</A></DIV>
+<DIV id="advertise_bottom" class="sinaPlan SinaAd_hide"></DIV>
+<!-- 内容开始 -->
+		             <DIV class="CP_cmtpost" id="CP_cmtpost_cms">
+	<DIV class="CP_cmtt_d"><SPAN class="floatLeft"><STRONG>评论</STRONG>&nbsp;&nbsp;&nbsp;&nbsp;<A href="http://blog.sina.com.cn/lm/8/2009/0325/105340.html" target="_blank">重要提示：警惕虚假中奖信息，点击查看详情</A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A href="http://sina.allyes.com/main/adfclick?db=sina&bid=181511,226672,231692&cid=0,0,0&sid=220668&advid=3406&camid=32667&show=ignore&url=http://play.sina.com.cn/index.php" target="_blank">新浪疯狂版首页让你心跳不已</A><EM><SPAN class="my2008" id="COMMENT_FIRST_HOT"></SPAN></EM><A name="comment"></A></SPAN><SPAN class="manage floatRight"><A href="http://blog.sina.com.cn/s/blog_48f93b530100fv7y.html~type=v5_one&label=rela_nextarticle#post" class="CP_a_fuc">[<CITE>发评论</CITE>]</A></SPAN>
+                </DIV>
+	
+	<UL id="article_comment_list" class="CP_lis"><LI class="CP_litem"><DIV class="CP_cmt_none">暂无评论。</DIV></LI></UL> 
+	<DIV id="commentPaging" class="CP_page" style="display: none; ">
+			<UL class="CP_pages">
+			</UL>
+	</DIV>
+	<A name="post"></A>	
+	<DIV class="CP_cmtt_d marginTop_d1"> 
+  <SPAN class="floatLeft"><STRONG>发评论</STRONG>&nbsp;&nbsp;&nbsp;&nbsp;<A href="http://client.sina.com.cn/windows7" target="_blank">你的Windows 7 你做主</A>&nbsp;&nbsp;&nbsp;&nbsp;<A href="http://sina.allyes.com/main/adfclick?db=sina&bid=181511,226673,231693&cid=0,0,0&sid=220669&advid=3406&camid=32667&show=ignore&url=http://play.sina.com.cn/index.php" target="_blank">新浪史上最NB的活动有你一份礼</A></SPAN>
+    <SPAN class="manage floatRight"></SPAN>
+	</DIV>
+<DIV class="CP_cmt_main">
+<DIV class="CP_cmt_line1"><UL class="CP_cmt_info floatLeft" id="comment_wel" style="display:none;"><LI class="CP_cmt_nm_d" id="comment_wel2" style="display:none;">用户昵称:</LI></UL>
+<UL class="CP_cmt_int_d floatRight">
+<LI class="CP_cmt_int_img"><A class="" href="http://blog.sina.com.cn/s/blog_48f93b530100fv7y.html~type=v5_one&label=rela_nextarticle#" onclick="return false;"><IMG align="absmiddle" title="" alt="" src="./调试Release发布版程序的Crash错误（二）_files/CP_i.gif" class="CP_i CP_i_ins_smi"><CITE id="article_comment_insertSmile">插入表情</CITE></A></LI>
+</UL></DIV>
+<P class="CP_cmtxt_d"><TEXTAREA id="commentArea" class="commentArea"></TEXTAREA></P>
+<UL class="CP_cmtpf">
+	<LI class="CP_cmtnm">登录名：<INPUT type="text" id="login_name"></LI>
+	<LI class="CP_cmtpw">密码：<INPUT type="password" id="login_pass"></LI>
+	<LI><A href="http://login.sina.com.cn/getpass.html" target="_blank">找回密码</A></LI>
+    <LI><A href="http://login.sina.com.cn/hd/reg.php?entry=shequ" target="_blank">注册</A></LI>
+	<LI class="CP_cmtnm" style="display: none; " id="comment_anon">昵&nbsp;&nbsp;&nbsp;称：<INPUT type="text" id="comment_anonyous" disabled=""></LI>
+	<LI class="CP_cmt_any" id="cmt_hide"><LABEL><INPUT type="checkbox" id="anonymity">匿名评论</LABEL></LI>
+</UL>
+<P class="CP_cmtvc"><EM>验证码：</EM><INPUT type="text" maxlength="4" class="checkwd" id="login_check"><SPAN id="check_show">请点击后输入验证码</SPAN>&nbsp;&nbsp;<IMG id="comment_check_img" border="0" align="absmiddle" alt="看不清楚数字吗？点击这里再试试。" style="display:none;"><SPAN id="audioCheckCont"><A style="margin-left:3px;" href="javascript:Module.AudioCheck.callAudioCheck();">收听验证码</A><IMG id="play_img" name="play_img" src="./调试Release发布版程序的Crash错误（二）_files/blank.gif" align="absmiddle" style="margin-right:2px;" height="15"><OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=5,0,0,0" width="0" height="0" id="mp3_player" align="middle"><PARAM name="allowScriptAccess" value="always"><PARAM name="movie" value="http://simg.sinajs.cn/common/swf/mp3.swf"><PARAM name="quality" value="high"><PARAM name="bgcolor" value="#ffffff"><PARAM name="FlashVars" value="mp3URL=http://icp.cws.api.sina.com.cn/login/login_audio.php"><EMBED src="http://simg.sinajs.cn/common/swf/mp3.swf" flashvars="mp3URL=http://icp.cws.api.sina.com.cn/login/login_audio.php" quality="high" bgcolor="#ffffff" width="0" height="0" name="mp3_player" swliveconnect="true" align="middle" allowscriptaccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"></OBJECT></SPAN></P>
+<P class="CP_cmtsub"><A class="CP_a_btn CP_a_btn14 CP_a_btnsub" href="http://blog.sina.com.cn/s/blog_48f93b530100fv7y.html~type=v5_one&label=rela_nextarticle#" onclick="return false;"><CITE id="comment_post_btn">发评论</CITE><INPUT type="submit" value=""></A></P>
+<P class="CP_cmtresv CP_txtc">以上网友发言只代表其个人观点，不代表新浪网的观点或立场。</P>
+</DIV></DIV>
+<!-- 内容结束 -->
+          </DIV></DIV>
+          <DIV class="componentBottom"></DIV>
+        </DIV>
+</DIV>
+</DIV>
+
+    
+    <DIV class="gap floatLeft"></DIV>
+    <DIV class="column_1 floatLeft">
+    
+      <DIV class="components210" id="column_1">
+      <DIV id="adps000001"></DIV>
+              <DIV class="component" id="module_903" load_style="1">
+          <DIV class="componentBar">
+          <SPAN class="title">相关博文</SPAN>
+          </DIV>
+          <DIV class="componentContent"><DIV class="recoatlis2"><UL>		<LI><P><A href="http://blog.sina.com.cn/s/blog_638b51dd0100fw6l.html~type=v5_one&label=rela_articletagpub" target="_blank" title="唐僧原来是这种人">唐僧原来是这种人</A></P><P class="recoatlis_aut CP_linkb"><A href="http://blog.sina.com.cn/u/1670074845" target="_blank">超级新动的博客</A></P></LI>		<LI><P><A href="http://blog.sina.com.cn/s/blog_593e34060100geep.html~type=v5_one&label=rela_articletagpub" target="_blank" title="PLOGit博客聚会抓拍靓女帅哥（">PLOGit博客聚会抓拍靓女帅哥（</A></P><P class="recoatlis_aut CP_linkb"><A href="http://blog.sina.com.cn/u/1497248774" target="_blank">杨孝文</A></P></LI>		<LI><P><A href="http://blog.sina.com.cn/s/blog_5854ac960100fuza.html~type=v5_one&label=rela_articletagpub" target="_blank" title="千元TD手机意味了3G平民化时代">千元TD手机意味了3G平民化时代</A></P><P class="recoatlis_aut CP_linkb"><A href="http://blog.sina.com.cn/u/1481944214" target="_blank">项立刚</A></P></LI>		<LI><P><A href="http://blog.sina.com.cn/s/blog_50350d150100fyrc.html~type=v5_one&label=rela_articletagpub" target="_blank" title="郑博士：2010年六大增运小妙招">郑博士：2010年六大增运小妙招</A></P><P class="recoatlis_aut CP_linkb"><A href="http://blog.sina.com.cn/u/1345654037" target="_blank">郑博士说风水</A></P></LI>		<LI><P><A href="http://blog.sina.com.cn/s/blog_4eec1e490100gpz5.html~type=v5_one&label=rela_articletagpub" target="_blank" title="女人用最原始方法吸引男人&nbsp;(图">女人用最原始方法吸引男人&nbsp;(图</A></P><P class="recoatlis_aut CP_linkb"><A href="http://blog.sina.com.cn/u/1324097097" target="_blank">健康天使</A></P></LI>		<LI><P><A href="http://blog.sina.com.cn/s/blog_591a7d2b0100gytd.html~type=v5_one&label=rela_articletagpub" target="_blank" title="09中国IC老杳榜7：十大IC新闻事">09中国IC老杳榜7：十大IC新闻事</A></P><P class="recoatlis_aut CP_linkb"><A href="http://blog.sina.com.cn/u/1494908203" target="_blank">老杳</A></P></LI>		<LI><P><A href="http://blog.sina.com.cn/s/blog_487674f50100h423.html~type=v5_one&label=rela_articletagpub" target="_blank" title="Intel哭了！牛人用434颗CPU制做">Intel哭了！牛人用434颗CPU制做</A></P><P class="recoatlis_aut CP_linkb"><A href="http://blog.sina.com.cn/u/1215722741" target="_blank">娄行健</A></P></LI>		<LI><P><A href="http://blog.sina.com.cn/s/blog_4c891b000100gdyu.html~type=v5_one&label=rela_articletagpub" target="_blank" title="秋无痕论坛因故暂停服务，预计">秋无痕论坛因故暂停服务，预计</A></P><P class="recoatlis_aut CP_linkb"><A href="http://blog.sina.com.cn/u/1284053760" target="_blank">秋无痕</A></P></LI>		<LI><P><A href="http://blog.sina.com.cn/s/blog_53923f000100fvlb.html~type=v5_one&label=rela_articletagpub" target="_blank" title="曹国伟凭什么参选中国经济人物">曹国伟凭什么参选中国经济人物</A></P><P class="recoatlis_aut CP_linkb"><A href="http://blog.sina.com.cn/u/1402093312" target="_blank">张书乐</A></P></LI>		<LI><P><A href="http://blog.sina.com.cn/s/blog_4cab48ba0100gjbn.html~type=v5_one&label=rela_articletagpub" target="_blank" title="2009年：中国3G仅有模仿是不够">2009年：中国3G仅有模仿是不够</A></P><P class="recoatlis_aut CP_linkb"><A href="http://blog.sina.com.cn/u/1286293690" target="_blank">孙永杰</A></P></LI>		<LI><P><A href="http://blog.sina.com.cn/s/blog_4a46c3960100gnt6.html~type=v5_one&label=rela_articletagpub" target="_blank" title="探秘吃人的&ldquo;死神岛&rdquo;">探秘吃人的“死神岛”</A></P><P class="recoatlis_aut CP_linkb"><A href="http://blog.sina.com.cn/u/1246151574" target="_blank">康斯坦丁</A></P></LI></UL></DIV><DIV class="recoline"></DIV><DIV class="CP_j_linedot CP_j_linedot2"></DIV><DIV class="recopholis">
+	<UL>
+			<LI>
+		<P><A onclick="v5SendLog(&#39;v5_one&#39;,&#39;rela_pic_113&#39;);" href="http://blog.sina.com.cn/s/blog_59a923a60100gaju.html?tj=1" target="_blank"><IMG src="./调试Release发布版程序的Crash错误（二）_files/U1637P2T276D53642F7168DT20091220231958_w80.jpg" width="80" height="58" alt="罕见的粉红色动物" border="0"></A></P>
+		<P><A onclick="v5SendLog(&#39;v5_one&#39;,&#39;rela_pic_113&#39;);" href="http://blog.sina.com.cn/s/blog_59a923a60100gaju.html?tj=1" target="_blank">罕见的粉红色动物</A></P>
+	</LI>
+	<LI>
+		<P><A onclick="v5SendLog(&#39;v5_one&#39;,&#39;rela_pic_113&#39;);" href="http://blog.sina.com.cn/s/blog_4fb7103f0100g4t3.html?tj=1" target="_blank"><IMG src="./调试Release发布版程序的Crash错误（二）_files/U1637P2T276D53636F7168DT20091220232035_w80.jpg" width="80" height="58" alt="不务正业的手机钱包" border="0"></A></P>
+		<P><A onclick="v5SendLog(&#39;v5_one&#39;,&#39;rela_pic_113&#39;);" href="http://blog.sina.com.cn/s/blog_4fb7103f0100g4t3.html?tj=1" target="_blank">不务正业的手机钱包</A></P>
+	</LI>
+	<LI class="videoImg2">
+		<P><A href="http://you.video.sina.com.cn/b/26308441-1255813677.html" target="_blank"><IMG src="./调试Release发布版程序的Crash错误（二）_files/U2550P478T2D73378F318DT20091125114945.jpg" class="videoImg" width="80" height="58" alt="盘点2009年最雷人发明" border="0"></A></P>
+		<P><A href="http://you.video.sina.com.cn/b/26308441-1255813677.html" target="_blank">盘点2009年最雷人发明</A></P>
+	</LI>
+	<LI class="videoImg2">
+		<P><A href="http://you.video.sina.com.cn/b/26290373-1255813677.html" target="_blank"><IMG src="./调试Release发布版程序的Crash错误（二）_files/U2550P478T2D73339F318DT20091124160543.jpg" class="videoImg" width="80" height="58" alt="明年必火十大智能手机" border="0"></A></P>
+		<P><A href="http://you.video.sina.com.cn/b/26290373-1255813677.html" target="_blank">明年必火十大智能手机</A></P>
+	</LI>
+	<LI>
+		<P><A onclick="v5SendLog(&#39;v5_one&#39;,&#39;rela_pic_113&#39;);" href="http://blog.sina.com.cn/s/blog_5040daca0100gncb.html?tj=1" target="_blank"><IMG src="./调试Release发布版程序的Crash错误（二）_files/U1637P2T276D53635F7168DT20091220232338_w80.jpg" width="80" height="58" alt="掉头发的即时贴" border="0"></A></P>
+		<P><A onclick="v5SendLog(&#39;v5_one&#39;,&#39;rela_pic_113&#39;);" href="http://blog.sina.com.cn/s/blog_5040daca0100gncb.html?tj=1" target="_blank">掉头发的即时贴</A></P>
+	</LI>
+	<LI>
+		<P><A onclick="v5SendLog(&#39;v5_one&#39;,&#39;rela_pic_113&#39;);" href="http://blog.sina.com.cn/s/blog_5040daca0100gno6.html?tj=1" target="_blank"><IMG src="./调试Release发布版程序的Crash错误（二）_files/U1637P2T276D53634F7168DT20091220232502_w80.jpg" width="80" height="58" alt="超恐怖的怪兽异型U盘" border="0"></A></P>
+		<P><A onclick="v5SendLog(&#39;v5_one&#39;,&#39;rela_pic_113&#39;);" href="http://blog.sina.com.cn/s/blog_5040daca0100gno6.html?tj=1" target="_blank">超恐怖的怪兽异型U盘</A></P>
+	</LI>
+
+	</UL>
+ </DIV>
+<DIV class="CP_j_linedot CP_j_linedot2"></DIV><DIV class="recomore"><A target="_blank" href="http://search.blog.sina.com.cn/blog/search?q=%B5%F7%CA%D4%2Crelease&tag=&s=0&t=tag">查看更多&gt;&gt;</A></DIV></DIV>
+          <DIV class="componentBottom"></DIV>
+        </DIV>	 
+		        <DIV class="component" id="module_904" load_style="1">
+          <DIV class="componentBar">
+          <SPAN class="title">推荐博文</SPAN>
+          </DIV>
+          <DIV class="componentContent"><DIV class="recoatlis2"><UL><LI><P><A href="http://blog.sina.com.cn/s/blog_44fea84d0100h8go.html?tj=1" target="_blank" title="免费杀毒从量变到质变">免费杀毒从量变到质变</A></P><P class="recoatlis_aut CP_linkb"><A target="_blank" href="http://blog.sina.com.cn/u/1157539917">贾敬华</A></P></LI><LI><P><A href="http://blog.sina.com.cn/s/blog_3d2313030100gug8.html?tj=1" target="_blank" title="三星LED电视推介会偷拍漂亮MM打游戏">三星LED电视推介会偷拍漂亮MM打</A></P><P class="recoatlis_aut CP_linkb"><A target="_blank" href="http://blog.sina.com.cn/u/1025708803">抚摸三下</A></P></LI><LI><P><A href="http://blog.sina.com.cn/s/blog_4a46c3960100gmmz.html?tj=1" target="_blank" title="搜索引擎的新鲜血液在哪">搜索引擎的新鲜血液在哪</A></P><P class="recoatlis_aut CP_linkb"><A target="_blank" href="http://blog.sina.com.cn/u/1246151574">康斯坦丁</A></P></LI><LI><P><A href="http://blog.sina.com.cn/s/blog_4a46c3960100gmpg.html?tj=1" target="_blank" title="峰会之峰会&ldquo;2009中国电子商务创新发展高峰论坛&rdquo;杂记">峰会之峰会“2009中国电子商务</A></P><P class="recoatlis_aut CP_linkb"><A target="_blank" href="http://blog.sina.com.cn/u/1246151574">康斯坦丁</A></P></LI><LI><P><A href="http://blog.sina.com.cn/s/blog_4ac308a20100g4tk.html?tj=1" target="_blank" title="当当网的10年煎熬">当当网的10年煎熬</A></P><P class="recoatlis_aut CP_linkb"><A target="_blank" href="http://blog.sina.com.cn/u/1254295714">陈佼</A></P></LI><LI><P><A href="http://blog.sina.com.cn/s/blog_4a46c3960100gmlb.html?tj=1" target="_blank" title="金融业能否创造互联网新金矿">金融业能否创造互联网新金矿</A></P><P class="recoatlis_aut CP_linkb"><A target="_blank" href="http://blog.sina.com.cn/u/1246151574">康斯坦丁</A></P></LI><LI><P><A href="http://blog.sina.com.cn/s/blog_48b688160100fzhx.html?tj=1" target="_blank" title="遨游要当心&ldquo;过劳死&rdquo;">遨游要当心“过劳死”</A></P><P class="recoatlis_aut CP_linkb"><A target="_blank" href="http://blog.sina.com.cn/u/1219921942">磐石之心</A></P></LI><LI><P><A href="http://blog.sina.com.cn/s/blog_4a46c3960100gmmv.html?tj=1" target="_blank" title="神奇的网络实物感觉器">神奇的网络实物感觉器</A></P><P class="recoatlis_aut CP_linkb"><A target="_blank" href="http://blog.sina.com.cn/u/1246151574">康斯坦丁</A></P></LI><LI><P><A href="http://blog.sina.com.cn/s/blog_44fea84d0100h8rz.html?tj=1" target="_blank" title="深入解析中国C2C市场的未来格局">深入解析中国C2C市场的未来格局</A></P><P class="recoatlis_aut CP_linkb"><A target="_blank" href="http://blog.sina.com.cn/u/1157539917">贾敬华</A></P></LI><LI><P><A href="http://blog.sina.com.cn/s/blog_537390530100g5ye.html?tj=1" target="_blank" title="魅族，披着山寨外衣雄起">魅族，披着山寨外衣雄起</A></P><P class="recoatlis_aut CP_linkb"><A target="_blank" href="http://blog.sina.com.cn/u/1400082515">In_Stat中国</A></P></LI></UL></DIV><DIV class="recoline"></DIV><DIV class="recomore"><A href="http://blog.sina.com.cn/lm/114/113/day.html" target="_blank">查看全部</A>&gt;&gt;</DIV></DIV>
+          <DIV class="componentBottom"></DIV>
+        </DIV>	         <DIV class="component" id="module_47" load_style="1" style="display: block; ">
+          <DIV class="componentBar">
+          <SPAN class="title floatLeft">谁看过这篇博文</SPAN>
+          </DIV>
+          <DIV class="componentContent"><DIV class="CP_li3"><UL class="CP_lis"><LI class="CP_litem"><P class="CP_avt"><A class="CP_avt_a" href="http://blog.sina.com.cn/u/1632226247" target="_blank"><IMG title="缘分天注定" alt="缘分天注定" class="CP_brd" src="./调试Release发布版程序的Crash错误（二）_files/50(1)"></A></P><P class="CP_pf_nm"><A href="http://blog.sina.com.cn/u/1632226247" title="缘分天注定" alt="缘分天注定" target="_blank">缘分天...</A></P><P class="CP_pf_tm CP_txtc"><CITE>12月2日</CITE></P></LI></UL></DIV></DIV>
+          <DIV class="componentBottom"></DIV>
+        </DIV>	 
+      </DIV>
+      
+    </DIV>
+    <DIV class="clear"></DIV>
+</DIV>
+<SCRIPT type="text/javascript" charset="utf-8" src="./调试Release发布版程序的Crash错误（二）_files/sina_blog_foot.js"></SCRIPT>  <DIV class="sinaBottom">    <CENTER>      <A target="_blank" href="http://blog.sina.com.cn/admin/advice/advice_list.php">新浪BLOG意见反馈留言板</A>　<A onclick="window.open (&#39;http://control.blog.sina.com.cn/admin/advice/impeach.php?url=http%3A//blog.sina.com.cn/s/blog_48f93b530100fv7y.html%7Etype%3Dv5_one%26label%3Drela_nextarticle&#39;, &#39;&#39;,&#39;height=495, width=510, top=0, left=0, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=n o, status=no&#39;);" href="javascript:;">不良信息反馈</A>　电话：95105670 提示音后按2键（按当地市话标准计费）　欢迎批评指正    </CENTER>    <P> <A target="_blank" href="http://corp.sina.com.cn/chn/">新浪简介</A> | <A target="_blank" href="http://corp.sina.com.cn/eng/">About Sina</A> | <A target="_blank" href="http://ads.sina.com.cn/">广告服务</A> | <A target="_blank" href="http://www.sina.com.cn/contactus.html">联系我们</A> | <A target="_blank" href="http://corp.sina.com.cn/chn/sina_job.html">招聘信息</A> | <A target="_blank" href="http://www.sina.com.cn/intro/lawfirm.shtml">网站律师</A> | <A target="_blank" href="http://english.sina.com/">SINA English</A> | <A target="_blank" href="http://members.sina.com.cn/apply/">会员注册</A> | <A target="_blank" href="http://blog.sina.com.cn/lm/help/2009/index.html">产品答疑</A> </P>    <P class="copyright"> Copyright © 1996 - 2009 SINA Corporation,  All Rights Reserved  <BR>    </P>    <DIV>新浪公司 <A target="_blank" href="http://www.sina.com.cn/intro/copyright.shtml">版权所有</A></DIV>  </DIV>
+</DIV>
+<SPAN name="pvcounter" pid="1" key="48f93b530100fv7y" url="http://blog.sina.com.cn/s/blog_48f93b530100fv7y.html" expara="" style="display:none"></SPAN>
+	   <SCRIPT id="PVCOUNTER_FORIE" type="text/javascript"></SCRIPT>
+	    
+
+
+<IFRAME id="webIM_Conn_Iframe" style="width:1px;height:1px;position:absolute;left:1px;top:1px;filter:alpha(opacity=0);-moz-opacity:0;"></IFRAME>
+<DIV id="webIM_Conn_Connect">
+</DIV>
+
+
+<SCRIPT>var __sayon_webim_msg_pop__ = false;</SCRIPT> 
+<SCRIPT src="./调试Release发布版程序的Crash错误（二）_files/webim.compressed.js"></SCRIPT>
+<SCRIPT type="text/javascript">loadResource();</SCRIPT><SCRIPT id="" src="./调试Release发布版程序的Crash错误（二）_files/article.js" charset="utf-8"></SCRIPT>
+<SCRIPT type="text/javascript">renderPage();</SCRIPT>
+<SCRIPT type="text/javascript">
+<!--
+	SinaSysTray.pro_init();
+//-->
+</SCRIPT>
+<SCRIPT type="text/javascript">
+// 登陆后输出登陆者的UID
+if($UID != null){
+	webIM($UID);
+}
+</SCRIPT>
+
+<SCRIPT type="text/javascript">
+if($UID != null && $UID != scope.$uid){
+	dwScript({url:"http://footprint.cws.api.sina.com.cn/add.php?pid=1&uid=" + scope.$uid + (typeof scope.$articleid != "undefined" ? "&subid=" + scope.$articleid : "") + "&varname=addNewVisitor"}); } 
+</SCRIPT>
+<SCRIPT type="text/javascript" src="./调试Release发布版程序的Crash错误（二）_files/pvcounter.js"></SCRIPT><SCRIPT type="text/javascript" src="./调试Release发布版程序的Crash错误（二）_files/pvcounter"></SCRIPT>
+
+ 
+<SCRIPT type="text/javascript" src="./调试Release发布版程序的Crash错误（二）_files/pos=quitad&site=sina" charset="utf-8"></SCRIPT> 
+<SCRIPT type="text/javascript" src="./调试Release发布版程序的Crash错误（二）_files/680.js"></SCRIPT>
+
+
+<!-- SUDA_CODE_START --> 
+<SCRIPT type="text/javascript" src="./调试Release发布版程序的Crash错误（二）_files/suda_s_v851c.js"></SCRIPT><DIV style="position:absolute;top:0;left:0;width:0;height:0;z-index:1"><DIV style="position:absolute;top:0;left:0;width:1;height:1;"><IFRAME id="SUDA_FC" src="" width="1" height="1" scrolling="NO" frameborder="0"></IFRAME></DIV><DIV style="position:absolute;top:0;left:0;width:0;height:0;visibility:hidden" id="SUDA_CS_DIV"><IMG width="0" height="0" src="./调试Release发布版程序的Crash错误（二）_files/a.gif" border="0" alt=""></DIV></DIV><SCRIPT type="text/javascript" src="./调试Release发布版程序的Crash错误（二）_files/survey_20091215.js"></SCRIPT><SCRIPT type="text/javascript" src="./调试Release发布版程序的Crash错误（二）_files/SinaJoy_v3.js"></SCRIPT><SPAN id="sinaJoy"></SPAN> 
+<SCRIPT type="text/javascript"> 
+//<!--
+try{
+var config_pic = config?(config.common?((config.common.head||config.common.head)?((config.common.head.usepic||config.common.bg.usepic)?((config.common.head.usepic=='1')||(config.common.bg.usepic=='1')?1:0):0):0):0):0;
+var config_cc ="";
+_S_pSt(_S_PID_,config.common.t+","+config.common.r+","+config_pic,config_cc);
+}catch(e){}
+//-->
+</SCRIPT> 
+<!-- SUDA_CODE_END --> 
+
+
+  
+  
+<!-- START WRating v1.0 -->
+<SCRIPT type="text/javascript" src="./调试Release发布版程序的Crash错误（二）_files/a1.js"></SCRIPT>
+<SCRIPT type="text/javascript">
+try{
+var vjAcc="860010-0328010000"; 
+var wrUrl="http://sina.wrating.com/";
+vjTrack("");
+}catch(e){};
+</SCRIPT><DIV style="display:none"><IMG src="./调试Release发布版程序的Crash错误（二）_files/a(1).gif" id="wrTagImage" width="1" height="1"></DIV>
+<NOSCRIPT></NOSCRIPT>
+<!-- END WRating v1.0 -->
+
+<!-- SSO_CODE_START -->
+<SCRIPT language="JavaScript">
+<!--
+ if($UID != null){
+  document.write("<scr" + "ipt charset='utf-8' src='http://image2.sina.com.cn/unipro/js/ssologin.js'></scr" + "ipt>"); 
+ }
+//-->
+</SCRIPT>
+<!-- SSO_CODE_END -->
+<!-- START Nielsen//NetRatings SiteCensus V5.2 -->
+<!-- COPYRIGHT 2006 Nielsen//NetRatings --> 
+<SCRIPT type="text/javascript">
+	var _rsCI="cn-sina2006";	 
+	var _rsCG="0";	
+	var _rsDN="//secure-cn.imrworldwide.com/";	
+	var _rsCC=0;	
+	var _rsSE=1;	
+	var _rsSM=0.01;	 
+	var _rsSS=1500;	 
+</SCRIPT>
+<SCRIPT type="text/javascript" src="./调试Release发布版程序的Crash错误（二）_files/v52.js"></SCRIPT><IMG src="./调试Release发布版程序的Crash错误（二）_files/m" width="1" height="1" alt="">
+<NOSCRIPT></NOSCRIPT>
+<!-- END Nielsen//NetRatings SiteCensus V5.2 -->
+
+<SCRIPT id="scriptId_0.0016953200101852417" src="./调试Release发布版程序的Crash错误（二）_files/num" charset="utf-8"></SCRIPT><SCRIPT src="./调试Release发布版程序的Crash错误（二）_files/collect" id="scriptId_0.9574693022295833" charset="UTF-8"></SCRIPT><DIV id="ijax_iframes"><IFRAME id="loadingIframe_thread1025" name="loadingIframe_thread1025" class="invisible" scrolling="no" src="./调试Release发布版程序的Crash错误（二）_files/sort_113_3_v1.htm" allowtransparency="true" style="display:none;" frameborder="0"></IFRAME><IFRAME id="loadingIframe_thread13872" name="loadingIframe_thread13872" class="invisible" scrolling="no" src="./调试Release发布版程序的Crash错误（二）_files/113_day.v1.htm" allowtransparency="true" style="display:none;" frameborder="0"></IFRAME></DIV><DIV id="ramdomVisitDiv" style="position: absolute; top: 43px; width: 100px; right: 0px; "><EMBED type="application/x-shockwave-flash" src="http://simg.sinajs.cn/common/swf/rndView.swf" width="100" height="120" style="undefined" id="map" name="map" bgcolor="#000" quality="high" scale="noscale" allowscriptaccess="always" wmode="transparent" flashvars="target=_self&amp;URL="></DIV></BODY></HTML>

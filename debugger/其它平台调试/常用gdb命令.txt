@@ -1,0 +1,22 @@
+s(step)			下一步(进入)
+n(next)			下一步(不进入)
+finish			跳出当前函数
+return 			取消当前函数的执行，并立即返回。
+f			显示当前源文件名，源代码行，参数名，函数参数
+p(print)		显示/修改指定变量(p varname=4/set var)
+jump 			跳转执行指令，跳到某源文件某行执行或者偏移(jump MySrc.cpp:145 / jump +4 / set $pc = 0x485)
+i(info)			显示信息
+b(breakpoint)		设置断点(b MySrc.cpp:145/b MyFuncName)
+i b (info breakpoint)	当前断点信息
+d b (delete breakpoint)	删除指定断点(d b 1 2 4)
+display			执行指令后自动显示指定的变量(display varname) (undisplay / delete display / disable display / enable display )
+display/i $pc		$pc是GDB的环境变量，表示着指令的地址，/i则表示输出格式为机器指令码，也就是汇编。
+			于是当程序停下后，就会出现源代码和机器指令码相对应的情形，这是一个很有意义的功能。
+r(run) 			重新开始运行程序
+c(continue)		继续运行程序
+l(list)			列出当前指令附近源代码
+bt(backtrace)		列出当前函数调用栈
+where			列出当前函数调用栈
+set 			设置选项/环境变量(set $i = 0，设置环境变量i为0)。可以用help set来查看可以设置选项的参数。(help set/help set print)
+show			显示选项。(show print elements/show convenience显示所有环境变量)
+p $i			显示print的第i个历史记录(p $4)

@@ -1,0 +1,81 @@
+body {
+	scrollbar-face-color: #70A8BD;
+	scrollbar-highlight-color: #70A8BD;
+	scrollbar-shadow-color: #01658B;
+	scrollbar-3dlight-color: #FFFFFF;
+	scrollbar-arrow-color:  #F0FFFF;
+	scrollbar-track-color: #70A8BD;
+	scrollbar-darkshadow-color: #000000;
+	background-color: #01658B;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-left: 0px;
+}
+.MainText {
+	font-family: "宋体", "新宋体";
+	font-size: 9pt;
+	color: #FFFFFF;
+	line-height: 12pt;
+}
+.EnMain {
+	font-family: "Courier New", "Courier", "mono";
+	font-size: 9pt;
+	color: #FFFFFF;
+	text-decoration: none;
+}
+a:link {
+	color: #FFFFFF;
+	text-decoration: underline;
+
+}
+a:visited {
+	color: #66CCFF;
+	text-decoration: underline;
+}
+a:hover {
+	color: #FFCC66;
+	text-decoration: none;
+}
+.PanelBorder {
+	border-top-width: 0px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-right-color: #70A8BD;
+	border-bottom-color: #70A8BD;
+	border-left-color: #70A8BD;
+	padding-top: 0px;
+	padding-right: 5px;
+	padding-bottom: 5px;
+	padding-left: 5px;
+}
+.HotArea {
+	cursor: pointer;
+}
+.PageIndicator {
+	font-family: "Webdings";
+	font-size: 9pt;
+	color: #FFFFFF;
+}
+.Button {
+	font-family: "宋体", "新宋体";
+	font-size: 9pt;
+	color: #FFFFFF;
+	background-color: #01658B;
+	border: 2px outset #70A8BD;
+	vertical-align: middle;
+}
+.InsetLook {
+	font-family: "宋体", "新宋体";
+	font-size: 9pt;
+	color: #FFFFFF;
+	background-color: #01658B;
+	border: 2px inset #70A8BD;
+	vertical-align: middle;
+}
+form {
+	margin: 0px;
+}

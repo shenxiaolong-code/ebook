@@ -1,0 +1,32 @@
+缺省情况下，gdb无法显示容器数据的，可使用以下配置来实现
+1.把gdbinit.txt复制于home目录下，并改名为.gdbinit。
+  cat gdbinit.txt >> ~/.gdbinit
+2.在gdb中运行source ~/.gdbinit
+　(gdb) source ~/.gdbinit
+3.即可使用pvector等类似的命令查看容器数据
+
+使用GDB的"p variable-name"查看STL容器类，只会显示该容器的一些信息，并不能很友好的显示该容器的内容。使用stl-views.gdb这个脚本可以很好地解决这一问题。下载stl-veiws.gdb文件，将其放到~/目录下，直接将其改名为~/.gdbinit，或者在你已有的.gdbinit文件中用source ~/.stl-views.gdb命令将其包含。这样你就可以用下面的命令显示STL容器类了。 
+
+ 容器类型  GDB 命令  
+std::vector<T>  pvector stl_variable  
+std::list<T>  plist stl_variable T  
+std::map<T,T>  pmap stl_variable  
+std::multimap<T,T>  pmap stl_variable  
+std::set<T>  pset stl_variable T  
+std::multiset<T>  pset stl_variable  
+std::deque<T>  pdequeue stl_variable  
+std::stack<T>  pstack stl_variable  
+std::queue<T>  pqueue stl_variable  
+std::priority_queue<T>  ppqueue stl_variable  
+std::bitset<n><td>  pbitset stl_variable  
+std::string  pstring stl_variable  
+std::widestring  pwstring stl_variable  
+
+举例： 
+
+如果你的C++代码中有定义: set<string> s; 
+则在GDB中可以使用如下命令查看该set的信息与内容： 
+pset s - 打印该集合s的定义和大小 
+pset s char* - 打印该集合s的大小以及该集合的所有元素 
+
+本文来自CSDN博客，转载请标明出处：http://blog.csdn.net/JsuFcz/archive/2009/11/13/4806941.aspx

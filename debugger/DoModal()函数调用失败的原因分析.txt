@@ -1,0 +1,22 @@
+DoModal()函数调用失败的原因分析
+对话框DoModal()函数调用失败一般而言有两种表现形式：一是对话框弹不出来，但是没有错误提示；二是对话框弹不出来，同时伴随内存访问错误的提示框出现。
+
+第一种表现主要是因为没有对资源句柄进行切换造成的，以在DLL中弹出对话框中最为常见。解决办法是：如果是MFC规则DLL，可以使用所有导出函数的开始处添加 AFX_MANAGE_STATE宏，具体代码为：AFX_MANAGE_STATE(AfxGetStaticModuleState( ))，如果是MFC扩展DLL，具体做法是
+1.     在DLL中定义两个全局变量，
+HINSTANCE hResOld; // 旧的资源句柄
+HINSTANCE hDll; // DLL资源句柄
+
+2.      在DllMain函数里初始化hDll
+hDll = hInstance;
+
+3.     在调用对话框DoModal()函数之前进行资源句柄切换
+HINSTANCE hResOld = AfxGetResourceHandle(); 
+AfxSetResourceHandle(hDll); 
+……
+CYourDlg dlg; 
+dlg.DoModal(); 
+……
+AfxSetResourceHandle(hResOld); 
+
+
+        若是第二种表现，即对话框弹不出来，同时伴随内存访问错误的提示框出现，那么问题很可能出现在初始化对话框界面的代码方面，具体是在OnInitDialog函数，即使它是在DLL中弹出对话框。事实上在在DLL中弹出对话框如果不进行资源句柄切换，顶多是弹不出对话框，并不会出现内存访问方面的错误。在解决这方面的错误，一个误区是单步进入DoModal()函数调试，直至定位DoModal函数内部哪一句出错。后来我发现这纯粹是浪费时间，就算定位了在DoModal函数内部哪一句出错，你依然不知道为什么会出错。实际上调用DoModal()函数，激发的却是OnInitDialog函数。因此你只需确定OnInitDialog函数哪一句出错了（这里的OnInitDialog函数是指派生对话框类的OnInitDialog函数）。 
